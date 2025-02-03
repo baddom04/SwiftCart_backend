@@ -1,0 +1,85 @@
+[MVP]
+
+User
+- ID - unique, primary key
+- username - string, at least 5 chars
+- password - string, at least 8 chars, must contain special chars, and numbers
+- email address - email, unique
+- isAdmin - bool, default: false
+
+Household
+- ID - unique, primary key
+- Name - string at least 5 chars
+- ownerUserID - unique
+
+User-household
+- ID - unique, primary key
+- userID - unique
+- householdID - unique
+
+Grocery
+- ID - unique, primary key
+- Name - string, not empty
+- Quantity - integer, nullable
+- Unit type - enum, nullable (either both are null, or none)
+- Description - string, nullable
+- householdID - unique
+- userID - unique
+
+Connections
+- User - household  ->  many to many
+- User - grocery  ->  1 to many
+- Household - grocery  ->  1 to many
+
+[MVP+]
+
+User
+- shopID - unique, nullable
+
+Shop
+- ID - unique, primary key
+- Name - string, not empty
+- Location [TODO how]
+- mapID - unique, nullable
+
+Map
+- ID - unique, primary key
+- Horizontal size - integer
+- Vertical size - integer
+- shopID - unique
+
+Map segment
+- ID - unique, primary key
+- horizontal index - integer
+- vertical index - integer
+- type - enum (product container [shelf, fridge etc.], empty space, outside of shop, cashier, entry, wall etc.)
+- mapID - unique
+
+Product
+- ID - unique, primary key
+- Name - string, not empty
+- Description - string, nullable
+- mapSegmentID - unique
+
+Connections
+- Shop - map  ->  1 to 1
+- Map - map segment  ->  1 to many
+- Map segment - product  ->  1 to many 
+
+[OPTIONAL]
+
+Comment
+- ID - unique, primary key
+- Content - string, not emtpy
+- userID - unique
+- groceryID - unique
+
+Shop
+- preview image
+
+Product
+- preview image
+
+Connections
+- User - comment -> 1 to many
+- Grocery - comment -> 1 to many
