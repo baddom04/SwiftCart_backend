@@ -18,7 +18,10 @@ User-household
 - userID - unique
 - householdID - unique
 
-
+HouseholdApplication
+- ID - unique, primary key
+- userID - unique
+- householdID - unique
 
 Grocery
 - ID - unique, primary key
@@ -33,6 +36,8 @@ Connections
 - User - household  ->  many to many
 - User - household -> one to many (ownership)
 - User - grocery  ->  1 to many
+- User - householdApplication -> 1 to many
+- Household - householdApplication -> 1 to many
 - Household - grocery  ->  1 to many
 
 [MVP+]

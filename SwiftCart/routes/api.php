@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\HouseholdApplicationController;
 use App\Http\Controllers\Api\HouseholdController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -19,5 +20,8 @@ Route::middleware('auth:sanctum')->group(
         Route::post('households', [HouseholdController::class, 'store'])->name('api.households.store');
         Route::put('households/{household}', [HouseholdController::class, 'update'])->where('id', '[0-9]+')->name('api.households.update');
         Route::delete('households/{household}', [HouseholdController::class, 'destroy'])->where('id', '[0-9]+')->name('api.households.destroy');
+
+        Route::post('applications', [HouseholdApplicationController::class, 'store'])->name('api.household_applications.store');
+        Route::delete('applications/{application}', [HouseholdApplicationController::class, 'destroy'])->where('id', '[0-9]+')->name('api.household_applications.destroy');
     }
 );

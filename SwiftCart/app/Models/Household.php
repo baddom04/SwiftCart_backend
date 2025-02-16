@@ -26,4 +26,9 @@ class Household extends Model
     {
         return $this->hasMany(Grocery::class);
     }
+
+    public function household_applications(): HasMany
+    {
+        return $this->hasMany(HouseholdApplication::class);
+    }
 }
