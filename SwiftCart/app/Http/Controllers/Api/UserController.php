@@ -7,8 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -39,17 +39,68 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $authUser = Auth::user();
+
+        if ($authUser->id !== $user->id && !$authUser->admin) {
+            return response()->json([
+                'error' => 'Unauthorized. Only the account owner or an admin can update this user.'
+            ], 403);
+        }
+
+        $rules = [];
+
+        if ($request->filled('name')) {
+            $rules['name'] = 'string|min:5';
+        }
+        if ($request->filled('email')) {
+            $rules['email'] = 'required|email|unique:users,email,' . $user->id;
+        }
+        if ($request->filled('password')) {
+            $rules['password'] = 'string|min:8';
+        }
+
+        $validated = $request->validate($rules);
+
+        if (isset($validated['name'])) {
+            $user->name = $validated['name'];
+        }
+        if (isset($validated['email'])) {
+            $user->email = $validated['email'];
+        }
+        if (isset($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+
+        $user->save();
+
+        return response()->json(['message' => "User updated successfully"], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $authUser = Auth::user();
+
+        Log::info('AuthUserID', [$authUser->id]);
+        Log::info('UserID', [$user->id]);
+
+        if ($authUser->id !== $user->id && !$authUser->admin) {
+            return response()->json([
+                'error' => 'Unauthorized. Only the account owner or an admin can delete this user.'
+            ], 403);
+        }
+
+        $user->tokens()->delete();
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully.'
+        ]);
     }
 
     public function register(Request $request)
@@ -58,7 +109,6 @@ class UserController extends Controller
             'name'     => 'required|string|min:5',
             'email'    => 'required|email|unique:users',
             'password' => 'required|string|min:8',
-            'admin'    => 'required|boolean'
         ]);
 
         if ($validator->fails()) {
@@ -73,7 +123,7 @@ class UserController extends Controller
             'name'     => $validated['name'],
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'admin'    => $validated['admin'],
+            'admin'    => false,
         ]);
 
         $token = $user->createToken($user->email, $user->admin ? ['swift_cart:admin'] : []);
@@ -105,8 +155,6 @@ class UserController extends Controller
         }
 
         $user = User::where('email', $validated['email'])->first();
-
-
 
         $token = $user->createToken($user->email, $user->admin ? ['swift_cart:admin'] : []);
 
