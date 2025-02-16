@@ -19,6 +19,7 @@ class HouseholdFactory extends Factory
     {
         return [
             'name' => fake()->word(),
+            'identifier' => fake()->unique()->word(),
         ];
     }
 }

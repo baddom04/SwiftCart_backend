@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('households', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('identifier')->unique();
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 

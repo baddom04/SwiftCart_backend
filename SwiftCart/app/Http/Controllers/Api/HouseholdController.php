@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Household;
 use App\Models\UserHousehold;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,6 +27,7 @@ class HouseholdController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:5',
+            'identifier' => 'required|string|min:5|unique:households',
         ]);
 
         if ($validator->fails()) {
@@ -38,6 +40,7 @@ class HouseholdController extends Controller
         $currentUser = Auth::user();
         $household = Household::factory()->create([
             'name' => $validated['name'],
+            'identifier' => $validated['identifier'],
             'user_id' => $currentUser->id,
         ]);
 
@@ -66,6 +69,12 @@ class HouseholdController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:5',
+            'identifier' => [
+                'required',
+                'string',
+                'min:5',
+                Rule::unique('households')->ignore($household->id),
+            ]
         ]);
 
         if ($validator->fails()) {
@@ -84,6 +93,7 @@ class HouseholdController extends Controller
 
         $validated = $validator->validated();
         $household->name = $validated['name'];
+        $household->identifier = $validated['identifier'];
         $household->save();
 
         return response()->json([
