@@ -9,13 +9,16 @@ User
 
 Household
 - ID - unique, primary key
-- Name - string at least 5 chars
+- Display Name - string at least 5 chars
+- Identifier - string at least 5 chars
 - ownerUserID - unique
 
 User-household
 - ID - unique, primary key
 - userID - unique
 - householdID - unique
+
+
 
 Grocery
 - ID - unique, primary key

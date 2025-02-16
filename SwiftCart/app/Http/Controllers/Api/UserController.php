@@ -85,9 +85,6 @@ class UserController extends Controller
     {
         $authUser = Auth::user();
 
-        Log::info('AuthUserID', [$authUser->id]);
-        Log::info('UserID', [$user->id]);
-
         if ($authUser->id !== $user->id && !$authUser->admin) {
             return response()->json([
                 'error' => 'Unauthorized. Only the account owner or an admin can delete this user.'
