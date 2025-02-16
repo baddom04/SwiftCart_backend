@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->has(Household::factory(2))->create();
 
         foreach (Household::all() as $household) {
-
             $user = User::where('id', '!=', $household->user->id)->inRandomOrder()->first();
             UserHousehold::factory()->create(['user_id' => $household->user->id, 'household_id' => $household->id]);
             UserHousehold::factory()->create(['user_id' => $user->id, 'household_id' => $household->id]);
@@ -35,5 +34,12 @@ class DatabaseSeeder extends Seeder
                 Comment::factory()->create(['grocery_id' => $grocery->id, 'user_id' => $grocery->household->user_households()->inRandomOrder()->first()->user->id]);
             }
         }
+
+        User::factory()->create([
+            'name' => 'Domi',
+            'email' => 'domi@gmail.com',
+            'password' => 'password',
+            'admin' => true,
+        ]);
     }
 }

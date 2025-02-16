@@ -3,7 +3,7 @@
 User
 - ID - unique, primary key
 - username - string, at least 5 chars
-- password - string, at least 8 chars, must contain special chars, and numbers
+- password - string, at least 8 chars
 - email address - email, unique
 - isAdmin - bool, default: false
 
