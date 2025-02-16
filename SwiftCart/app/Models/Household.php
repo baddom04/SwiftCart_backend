@@ -17,8 +17,13 @@ class Household extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function user_households() : HasMany
+    public function user_households(): HasMany
     {
         return $this->hasMany(UserHousehold::class);
-    } 
+    }
+
+    public function groceries(): HasMany
+    {
+        return $this->hasMany(Grocery::class);
+    }
 }
