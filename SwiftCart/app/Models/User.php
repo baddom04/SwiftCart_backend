@@ -47,13 +47,23 @@ class User extends Authenticatable
         ];
     }
 
-    public function households() : HasMany
+    public function households(): HasMany
     {
         return $this->hasMany(Household::class);
     }
 
-    public function user_households() : HasMany
+    public function user_households(): HasMany
     {
         return $this->hasMany(UserHousehold::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function groceries(): HasMany
+    {
+        return $this->hasMany(Grocery::class);
     }
 }

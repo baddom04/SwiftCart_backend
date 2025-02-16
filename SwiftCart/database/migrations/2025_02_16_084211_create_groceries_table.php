@@ -19,9 +19,11 @@ return new class extends Migration
             $table->enum('unit', Grocery::getUnitTypes())->nullable();
             $table->string('description')->nullable();
             $table->unsignedBigInteger('household_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
             $table->foreign('household_id')->references('id')->on('households')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

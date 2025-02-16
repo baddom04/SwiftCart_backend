@@ -28,6 +28,7 @@ Grocery
 
 Connections
 - User - household  ->  many to many
+- User - household -> one to many (ownership)
 - User - grocery  ->  1 to many
 - Household - grocery  ->  1 to many
 
