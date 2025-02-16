@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Household;
 use App\Models\User;
+use App\Models\UserHousehold;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,11 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->has(Household::factory(2))->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach (Household::all() as $household) {
+            $user = User::where('id', '!=', $household->user->id)->inRandomOrder()->first();
+            UserHousehold::factory()->create(['user_id' => $household->user->id, 'household_id' => $household->id]);
+            UserHousehold::factory()->create(['user_id' => $user->id, 'household_id' => $household->id]);
+        }
     }
 }
