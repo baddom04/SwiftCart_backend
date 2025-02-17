@@ -8,6 +8,7 @@ use App\Models\UserHousehold;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class HouseholdController extends Controller
@@ -17,7 +18,7 @@ class HouseholdController extends Controller
      */
     public function index()
     {
-        //
+        return Auth::user()->households;
     }
 
     /**
@@ -87,7 +88,7 @@ class HouseholdController extends Controller
 
         if ($authUser->id !== $household->user->id && !$authUser->admin) {
             return response()->json([
-                'error' => 'Unauthorized. Only the account owner or an admin can update this household.'
+                'error' => 'Unauthorized'
             ], 403);
         }
 
@@ -110,7 +111,7 @@ class HouseholdController extends Controller
 
         if ($authUser->id !== $household->user->id && !$authUser->admin) {
             return response()->json([
-                'error' => 'Unauthorized. Only the account owner or an admin can update this household.'
+                'error' => 'Unauthorized'
             ], 403);
         }
 

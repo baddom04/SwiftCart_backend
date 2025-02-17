@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Household;
 use App\Models\HouseholdApplication;
+use App\Models\UserHousehold;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class HouseholdApplicationController extends Controller
@@ -25,7 +28,7 @@ class HouseholdApplicationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'household_id' => 'required|gte:0|integer|exists:households,id'
+            'household_id' => 'required|gte:1|integer|exists:households,id'
         ]);
 
         if ($validator->fails()) {
@@ -46,6 +49,17 @@ class HouseholdApplicationController extends Controller
         if ($exists) {
             return response()->json([
                 'error' => 'This application already exists',
+            ], 400);
+        }
+
+        $exists = DB::table('user_households')
+            ->where('user_id', $userID)
+            ->where('household_id', $householdID)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'error' => 'The user is already in this household',
             ], 400);
         }
 
@@ -80,14 +94,35 @@ class HouseholdApplicationController extends Controller
     {
         $authUser = Auth::user();
 
-        if ($authUser->id !== $application->user->id && !$authUser->admin) {
+        if ($authUser->id !== $application->user->id && !$authUser->admin && $authUser->id !== $application->household->user->id) {
             return response()->json([
-                'error' => 'Unauthorized. Only the account owner or an admin can delete this application.'
+                'error' => 'Unauthorized'
             ], 403);
         }
 
         $application->delete();
 
         return response()->json(['Message' => 'Application deleted successfully'], 200);
+    }
+
+    public function accept_user(HouseholdApplication $application)
+    {
+        $authUser = Auth::user();
+
+        if (!$authUser->admin && $authUser->id !== $application->household->user->id) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        UserHousehold::factory()->create(['user_id' => $application->user->id, 'household_id' => $application->household->id]);
+
+        $application->delete();
+
+        return response()->json(['Message' => 'Application accepted successfully'], 200);
+    }
+    public function get_applications(Request $request)
+    {
+        return HouseholdApplication::whereIn('household_id', Auth::user()->user_households->pluck('household_id'))->get();
     }
 }

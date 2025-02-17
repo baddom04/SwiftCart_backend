@@ -45,7 +45,7 @@ class UserController extends Controller
 
         if ($authUser->id !== $user->id && !$authUser->admin) {
             return response()->json([
-                'error' => 'Unauthorized. Only the account owner or an admin can update this user.'
+                'error' => 'Unauthorized'
             ], 403);
         }
 
@@ -87,7 +87,7 @@ class UserController extends Controller
 
         if ($authUser->id !== $user->id && !$authUser->admin) {
             return response()->json([
-                'error' => 'Unauthorized. Only the account owner or an admin can delete this user.'
+                'error' => 'Unauthorized'
             ], 403);
         }
 
@@ -96,7 +96,7 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json([
-            'message' => 'User deleted successfully.'
+            'message' => 'User deleted successfully'
         ]);
     }
 

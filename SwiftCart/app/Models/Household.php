@@ -17,6 +17,11 @@ class Household extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(Household::class, 'user_households', 'household_id', 'user_id');
+    }
+
     public function user_households(): HasMany
     {
         return $this->hasMany(UserHousehold::class);

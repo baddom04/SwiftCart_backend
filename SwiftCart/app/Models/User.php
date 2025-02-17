@@ -48,9 +48,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function households(): HasMany
+    public function owned_households(): HasMany
     {
         return $this->hasMany(Household::class);
+    }
+
+    public function households()
+    {
+        return $this->belongsToMany(Household::class, 'user_households', 'user_id', 'household_id');
     }
 
     public function user_households(): HasMany
