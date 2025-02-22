@@ -22,13 +22,15 @@ Route::middleware('auth:sanctum')->group(
         //HouseholdController
         Route::post('households', [HouseholdController::class, 'store'])->name('api.households.store');
         Route::get('households', [HouseholdController::class, 'index'])->name('api.households.index');
+        Route::get('households/{household}', [HouseholdController::class, 'show'])->where('household', '[0-9]+')->name('api.households.show');
+        Route::get('households/{household}/users', [HouseholdController::class, 'list_users'])->where('household', '[0-9]+')->name('api.households.list_users');
         Route::get('users/{user}/households', [HouseholdController::class, 'list'])->where('user', '[0-9]+')->name('api.households.list');
         Route::put('households/{household}', [HouseholdController::class, 'update'])->where('household', '[0-9]+')->name('api.households.update');
         Route::delete('households/{household}', [HouseholdController::class, 'destroy'])->where('household', '[0-9]+')->name('api.households.destroy');
 
         //HouseholdApplicationController
         Route::post('households/{household}/applications', [HouseholdApplicationController::class, 'store'])->where('household', '[0-9]+')->name('api.household_applications.store');
-        Route::get('users/applications', [HouseholdApplicationController::class, 'get_sent_applications'])->name('api.household_applications.get_sent_applications');
+        Route::get('applications', [HouseholdApplicationController::class, 'get_sent_applications'])->name('api.household_applications.get_sent_applications');
         Route::get('households/{household}/applications', [HouseholdApplicationController::class, 'get_received_applications'])->where('household', '[0-9]+')->name('api.household_applications.get_received_applications');
         Route::post('applications/{application}', [HouseholdApplicationController::class, 'accept_user'])->where('application', '[0-9]+')->name('api.household_applications.accept_user');
         Route::delete('applications/{application}', [HouseholdApplicationController::class, 'destroy'])->where('application', '[0-9]+')->name('api.household_applications.destroy');

@@ -33,6 +33,18 @@ class HouseholdController extends Controller
 
         return $user->households;
     }
+    public function list_users(Household $household)
+    {
+        $authUser = Auth::user();
+
+        if (!$authUser->admin && !$authUser->households->contains('id', $household->id)) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        return $household->users;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -71,9 +83,9 @@ class HouseholdController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Household $household)
     {
-        //
+        return $household;
     }
 
     /**

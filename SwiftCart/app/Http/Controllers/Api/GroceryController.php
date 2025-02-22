@@ -19,13 +19,13 @@ class GroceryController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->where("household_id", $household->id)->exists()) {
+        if (!$authUser->admin && !$authUser->households->contains("id", $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
         }
 
-        return $household->groceries();
+        return $household->groceries;
     }
 
     /**
@@ -35,7 +35,7 @@ class GroceryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string',
-            'quantity'    => 'gte:0|integer',
+            'quantity'    => 'gte:0|integer|lte:999',
             'unit' => Rule::in(Grocery::getUnitTypes()),
             'description' => 'string'
         ]);
@@ -56,7 +56,7 @@ class GroceryController extends Controller
 
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->where("household_id", $household->id)->exists()) {
+        if (!$authUser->admin && !$authUser->households->contains("id", $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
@@ -64,8 +64,9 @@ class GroceryController extends Controller
 
         Grocery::factory()->create([
             'name' => $validated['name'],
-            'quantity' => $validated['quantity'],
-            'unit' => $validated['unit'],
+            'quantity' => $validated['quantity'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'unit' => $validated['unit'] ?? null,
             'household_id' => $household->id,
             'user_id' => $authUser->id,
         ]);
@@ -98,7 +99,7 @@ class GroceryController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->where("household_id", $household->id)->exists()) {
+        if (!$authUser->admin && !$authUser->households->contains("id", $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
