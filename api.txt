@@ -1,0 +1,37 @@
+Unauthorized endpoints:
+
+Users:
+
+✅ POST: login | Body example: { "email": "domi@gmail.com", "password": "password" }
+✅ POST: register | Body example: { "name": "Bence", "email": "bence@gmail.com", "password": "password" }
+
+Authorized endpoints:
+
+Users:
+
+✅ POST: logout | No Body | Logs out currently logged in user | Conditions: none
+✅ GET: user    | No Body | Retrieves the currently logged in user | Conditions: none
+✅ DELETE: users/{id} | No Body | Deletes the user with the associated ID | Conditions: Admin, or if the id belongs to the logged in user
+✅ PUT: users/{id} | Body example: { "name": "Bence", "email": "bence@gmail.com", "password": "password" } [optional fields] | Updates the user with the associated ID | Conditions: Admin, or if the id belongs to the logged in user
+
+Households:
+
+✅ POST: households | Body example: { "name": "MyHousehold", "identifier" : "my_household123" } | Creates a new household | Conditions: none
+✅ GET: households | No Body | Retrieves all households | Conditions: none
+✅ GET: users/{user_id}/households | No Body | Retrieves all of the currently logged in users households | Conditions: user_id is the logged in user or admin
+✅ DELETE: households/{id} | No Body | Deletes the households with the associated ID | Conditions: The logged in user is either admin or the owner of the household
+✅ PUT: households/{id} | No Body | Updates the household with the associated ID | Conditions: The logged in user is either admin or the owner of the household
+
+Applications: 
+
+✅ POST: households/{household_id}/applications | No Body | Creates a new application | Conditions: The user is not in this household already, and an application with the id-s does not exist.
+✅ GET: users/applications | No Body | Retrieves all of the application the the logged in user sent | Conditions: none
+✅ GET: households/{household_id}/applications | No Body | Retrieves applications that got sent to the given household | Conditions: admin, or the logged in user is the owner of the household
+✅ POST: applications/{id} | No Body | Creates a new UserHousehold, using the data of the application | Conditions: Admin, or if the logged in user is the owner of the household the application got sent to
+✅ DELETE: applications/{id} | No Body | Deletes the application with the associated ID | Conditions: Admin, or the logged in user is either the one who sent it, or the owner of the household the application got sent to
+
+Groceries: 
+öö
+✅ POST: households/{household_id}/groceries | Body example: { "name": "Alma", "quantity": 2, "unit": "Pieces", "Description": "This is the description"} | Creates a new grocery item | Conditions: Admin, or the currently logged in user is in the given household
+✅ GET: households/{household_id}/groceries | No Body | Retrieves all of the groceries that belongs to the given household id | Conditions: Admin, or the user is in the given household
+✅ DELETE: households/{household_id}/groceries/{id} | No Body | Deletes the grocery with the associated ID | Conditions: Admin, or the user is in the household that the grocery belongs to

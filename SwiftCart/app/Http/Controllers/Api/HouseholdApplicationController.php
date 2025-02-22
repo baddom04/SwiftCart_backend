@@ -25,21 +25,10 @@ class HouseholdApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Household $household)
     {
-        $validator = Validator::make($request->all(), [
-            'household_id' => 'required|gte:1|integer|exists:households,id'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->messages(),
-            ], 400);
-        }
-
-        $validated = $validator->validated();
         $userID = Auth::user()->id;
-        $householdID = $validated['household_id'];
+        $householdID = $household->id;
 
         $exists = DB::table('household_applications')
             ->where('user_id', $userID)
@@ -121,8 +110,20 @@ class HouseholdApplicationController extends Controller
 
         return response()->json(['Message' => 'Application accepted successfully'], 200);
     }
-    public function get_applications(Request $request)
+    public function get_sent_applications(Request $request)
     {
-        return HouseholdApplication::whereIn('household_id', Auth::user()->user_households->pluck('household_id'))->get();
+        return HouseholdApplication::where('user_id', Auth::user()->id)->get();
+    }
+    public function get_received_applications(Request $request, Household $household)
+    {
+        $authUser = Auth::user();
+
+        if (!$authUser->admin && $authUser->id !== $household->user->id) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        return HouseholdApplication::where('household_id', $household->id)->get();
     }
 }

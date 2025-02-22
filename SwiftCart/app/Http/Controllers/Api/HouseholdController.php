@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Household;
+use App\Models\User;
 use App\Models\UserHousehold;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,19 @@ class HouseholdController extends Controller
      */
     public function index()
     {
-        return Auth::user()->households;
+        return Household::all();
+    }
+    public function list(User $user)
+    {
+        $authUser = Auth::user();
+
+        if ($authUser->id !== $user->id && !$authUser->admin) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        return $user->households;
     }
 
     /**
