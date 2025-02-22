@@ -33,6 +33,14 @@ Applications:
 ✅ DELETE: applications/{id} | No Body | Deletes the application with the associated ID | Conditions: Admin, or the logged in user is either the one who sent it, or the owner of the household the application got sent to
 
 Groceries: 
+
 ✅ POST: households/{household_id}/groceries | Body example: { "name": "Alma", "quantity": 2, "unit": "Pieces", "Description": "This is the description"} | Creates a new grocery item | Conditions: Admin, or the currently logged in user is in the given household
+✅ PUT: households/{household_id}/groceries/{id} | Body example: { "name": "Alma", "quantity": 2, "unit": "Pieces", "Description": "This is the description"} | Updates a grocery item | Conditions: Admin, or the currently logged in user is in the given household, and the creator of the grocery
 ✅ GET: households/{household_id}/groceries | No Body | Retrieves all of the groceries that belongs to the given household id | Conditions: Admin, or the user is in the given household
 ✅ DELETE: households/{household_id}/groceries/{id} | No Body | Deletes the grocery with the associated ID | Conditions: Admin, or the user is in the household that the grocery belongs to
+
+Comments:
+
+✅ POST: households/{household_id}/groceries/{grocery_id} | Body example: { "content": "Ezt én nem veszem meg" } | Creates a new comment for a grocery | Conditions: Admin, or user has to be in the given household
+✅ GET: households/{household_id}/groceries/{grocery_id}/comments | No Body | Queries all comments related to the grocery | Conditions: Admin, or user has to be in the given household
+✅ DELETE: households/{household_id}/groceries/{grocery_id}/comments/{id} | No Body | Deletes the given comment | Conditions: Admin, and the user has to be the creator of the comment

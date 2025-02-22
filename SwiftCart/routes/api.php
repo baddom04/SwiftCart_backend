@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\GroceryController;
 use App\Http\Controllers\Api\HouseholdApplicationController;
 use App\Http\Controllers\Api\HouseholdController;
@@ -37,7 +38,14 @@ Route::middleware('auth:sanctum')->group(
 
         //GroceryController
         Route::post('households/{household}/groceries', [GroceryController::class, 'store'])->where('household', '[0-9]+')->name('api.groceries.store');
+        Route::put('households/{household}/groceries/{grocery}', [GroceryController::class, 'update'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.update');
         Route::get('households/{household}/groceries', [GroceryController::class, 'index'])->where('household', '[0-9]+')->name('api.groceries.index');
+        Route::get('households/{household}/groceries/{grocery}', [GroceryController::class, 'show'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.show');
         Route::delete('households/{household}/groceries/{grocery}', [GroceryController::class, 'destroy'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.destroy');
+
+        //CommentController
+        Route::post('households/{household}/groceries/{grocery}', [CommentController::class, 'store'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.comments.store');
+        Route::get('households/{household}/groceries/{grocery}/comments', [CommentController::class, 'index'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.comments.index');
+        Route::delete('households/{household}/groceries/{grocery}/comments/{comment}', [CommentController::class, 'destroy'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->where('comment', '[0-9]+')->name('api.comments.destroy');
     }
 );
