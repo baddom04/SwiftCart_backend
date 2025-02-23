@@ -19,7 +19,7 @@ class CommentController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains('id', $household->id)) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id)) {
             return response()->json(['error' => 'Unauthenticated'], 403);
         }
 
@@ -45,7 +45,7 @@ class CommentController extends Controller
 
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains('id', $household->id)) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id)) {
             return response()->json(['error' => 'Unauthenticated'], 403);
         }
 
@@ -81,7 +81,7 @@ class CommentController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains('id', $household->id) && $grocery->user->id !== $authUser->id) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id) && $grocery->user->id !== $authUser->id) {
             return response()->json(['error' => 'Unauthenticated'], 403);
         }
 

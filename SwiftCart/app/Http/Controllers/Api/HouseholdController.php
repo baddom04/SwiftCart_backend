@@ -31,13 +31,13 @@ class HouseholdController extends Controller
             ], 403);
         }
 
-        return $user->households;
+        return $user->memberHouseholds;
     }
     public function list_users(Household $household)
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains('id', $household->id)) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);

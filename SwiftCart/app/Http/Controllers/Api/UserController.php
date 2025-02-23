@@ -157,7 +157,7 @@ class UserController extends Controller
 
         return response()->json([
             'token' => $token->plainTextToken,
-        ]);
+        ], 200);
     }
 
     public function logout(Request $request)

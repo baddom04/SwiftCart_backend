@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\UserHousehold;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
