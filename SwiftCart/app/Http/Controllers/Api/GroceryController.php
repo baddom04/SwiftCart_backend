@@ -19,7 +19,7 @@ class GroceryController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains("id", $household->id)) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
@@ -56,7 +56,7 @@ class GroceryController extends Controller
 
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains("id", $household->id)) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
@@ -83,7 +83,7 @@ class GroceryController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains("id", $household->id)) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
@@ -120,7 +120,7 @@ class GroceryController extends Controller
 
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains("id", $household->id) && $authUser->id !== $grocery->user->id) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id) && $authUser->id !== $grocery->user->id) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);
@@ -153,7 +153,7 @@ class GroceryController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->households->contains("id", $household->id)) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
             return response()->json([
                 'error' => 'Unauthorized'
             ], 403);

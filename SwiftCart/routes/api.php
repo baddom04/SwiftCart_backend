@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\GroceryController;
 use App\Http\Controllers\Api\HouseholdApplicationController;
 use App\Http\Controllers\Api\HouseholdController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('register', [UserController::class, 'register'])->name('api.register');
