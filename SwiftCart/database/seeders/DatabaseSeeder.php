@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Domi',
             'email' => 'domi@gmail.com',
-            'password' => 'password',
+            'password' => config('secrets.password'),
             'admin' => true,
         ]);
         User::factory()->create([
