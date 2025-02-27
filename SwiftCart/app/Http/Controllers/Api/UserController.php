@@ -106,7 +106,7 @@ class UserController extends Controller
             ], 403);
         }
 
-        $user->password = Hash::make($validated['password']);
+        $user->password = Hash::make($validated['new_password']);
         $user->save();
 
         return response()->json(['Message' => 'Password updated successfully'], 200);
