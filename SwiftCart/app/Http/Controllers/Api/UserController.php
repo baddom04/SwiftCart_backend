@@ -52,7 +52,7 @@ class UserController extends Controller
         $rules = [];
 
         if ($request->filled('name')) {
-            $rules['name'] = 'string|min:5';
+            $rules['name'] = 'string';
         }
         if ($request->filled('email')) {
             $rules['email'] = 'required|email|unique:users,email,' . $user->id;
@@ -72,10 +72,44 @@ class UserController extends Controller
         if (isset($validated['password'])) {
             $user->password = Hash::make($validated['password']);
         }
-
         $user->save();
 
         return response()->json(['message' => "User updated successfully"], 200);
+    }
+
+    public function update_password(Request $request, User $user)
+    {
+        $authUser = Auth::user();
+
+        if ($authUser->id !== $user->id && !$authUser->admin) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string|min:8',
+            'new_password' => 'required|string|min:8'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->messages(),
+            ], 400);
+        }
+
+        $validated = $validator->validated();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'error' => 'The current password is incorrect.'
+            ], 403);
+        }
+
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        return response()->json(['Message' => 'Password updated successfully'], 200);
     }
 
     /**
@@ -103,7 +137,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|string|min:5',
+            'name'     => 'required|string',
             'email'    => 'required|email|unique:users',
             'password' => 'required|string|min:8',
         ]);

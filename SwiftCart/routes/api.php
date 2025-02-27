@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('user', [UserController::class, 'user'])->name('api.user');
         Route::delete('users/{user}', [UserController::class, 'destroy'])->where('user', '[0-9]+')->name('api.users.destroy');
         Route::put('users/{user}', [UserController::class, 'update'])->where('user', '[0-9]+')->name('api.users.update');
+        Route::put('users/{user}/password', [UserController::class, 'update_password'])->where('user', '[0-9]+')->name('api.users.update_password');
 
         //HouseholdController
         Route::post('households', [HouseholdController::class, 'store'])->name('api.households.store');

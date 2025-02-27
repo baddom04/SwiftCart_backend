@@ -13,6 +13,7 @@ Users:
 ✅ GET: user    | No Body | Retrieves the currently logged in user | Conditions: none
 ✅ DELETE: users/{id} | No Body | Deletes the user with the associated ID | Conditions: Admin, or if the id belongs to the logged in user
 ✅ PUT: users/{id} | Body example: { "name": "Bence", "email": "bence@gmail.com", "password": "password" } [optional fields] | Updates the user with the associated ID | Conditions: Admin, or if the id belongs to the logged in user
+✅ PUT: users/{id}/password | Body example: { "current_password": "c_password", "new_password": "n_password" } | Updates the logged in user's password | Conditions: Admin, or if the id belongs to the logged in user
 
 Households:
 
