@@ -49,19 +49,19 @@ class UserController extends Controller
             ], 403);
         }
 
-        $rules = [];
+        $validator = Validator::make($request->all(), [
+            'name'     => 'nullable|string|max:20',
+            'email'    => 'nullable|email|max:50|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8',
+        ]);
 
-        if ($request->filled('name')) {
-            $rules['name'] = 'string|max:20';
-        }
-        if ($request->filled('email')) {
-            $rules['email'] = 'required|email|max:50|unique:users,email,' . $user->id;
-        }
-        if ($request->filled('password')) {
-            $rules['password'] = 'string|min:8';
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->messages(),
+            ], 400);
         }
 
-        $validated = $request->validate($rules);
+        $validated = $validator->validated();
 
         if (isset($validated['name'])) {
             $user->name = $validated['name'];
