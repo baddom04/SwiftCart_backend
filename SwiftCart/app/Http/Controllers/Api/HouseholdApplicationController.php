@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Household;
 use App\Models\HouseholdApplication;
+use App\Models\User;
 use App\Models\UserHousehold;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -110,9 +111,35 @@ class HouseholdApplicationController extends Controller
 
         return response()->json(['Message' => 'Application accepted successfully'], 200);
     }
-    public function get_sent_applications(Request $request)
+    public function get_sent_applications(User $user)
     {
-        return HouseholdApplication::where('user_id', Auth::user()->id)->get();
+        $authUser = Auth::user();
+
+        if (!$authUser->admin && $authUser->id !== $user->id) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        return HouseholdApplication::where('user_id', $user->id)->get();
+    }
+    public function get_sent_households(User $user)
+    {
+        $authUser = Auth::user();
+
+        if (!$authUser->admin && $authUser->id !== $user->id) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        $householdIds = HouseholdApplication::where('user_id', $user->id)
+            ->pluck('household_id')
+            ->unique();
+
+        $households = Household::whereIn('id', $householdIds)->get();
+
+        return response()->json($households);
     }
     public function get_received_applications(Request $request, Household $household)
     {

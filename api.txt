@@ -23,12 +23,13 @@ Households:
 ✅ GET: households/{id} | No Body | Retrieves the specified household | Conditions: none
 ✅ GET: users/{user_id}/households | No Body | Retrieves all of the currently logged in users households | Conditions: user_id is the logged in user or admin
 ✅ DELETE: households/{id} | No Body | Deletes the households with the associated ID | Conditions: The logged in user is either admin or the owner of the household
-✅ PUT: households/{id} | No Body | Updates the household with the associated ID | Conditions: The logged in user is either admin or the owner of the household
+✅ PUT: households/{id} | { "name": "MyHousehold", "identifier" : "my_household123" } | Updates the household with the associated ID | Conditions: The logged in user is either admin or the owner of the household
 
 Applications: 
 
 ✅ POST: households/{household_id}/applications | No Body | Creates a new application | Conditions: The user is not in this household already, and an application with the id-s does not exist.
-✅ GET: applications | No Body | Retrieves all of the application the the logged in user sent | Conditions: none
+✅ GET: users/{user_id}/applications | No Body | Retrieves all of the applications the logged in user sent | Conditions: none
+✅ GET: users/households/applications | No Body | Retrieves all of the households the logged in user sent an application to | Conditions: none
 ✅ GET: households/{household_id}/applications | No Body | Retrieves applications that got sent to the given household | Conditions: admin, or the logged in user is the owner of the household
 ✅ POST: applications/{id} | No Body | Creates a new UserHousehold, using the data of the application | Conditions: Admin, or if the logged in user is the owner of the household the application got sent to
 ✅ DELETE: applications/{id} | No Body | Deletes the application with the associated ID | Conditions: Admin, or the logged in user is either the one who sent it, or the owner of the household the application got sent to
