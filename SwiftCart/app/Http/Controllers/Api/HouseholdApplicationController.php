@@ -153,4 +153,23 @@ class HouseholdApplicationController extends Controller
 
         return HouseholdApplication::where('household_id', $household->id)->get();
     }
+
+    public function get_received_users(Household $household)
+    {
+        $authUser = Auth::user();
+
+        if (!$authUser->admin && $authUser->id !== $household->user->id) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        $userIds = HouseholdApplication::where('household_id', $household->id)
+            ->pluck('user_id')
+            ->unique();
+
+        $users = User::whereIn('id', $userIds)->get();
+
+        return response()->json($users);
+    }
 }

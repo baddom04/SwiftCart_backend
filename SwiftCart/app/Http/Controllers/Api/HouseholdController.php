@@ -17,9 +17,16 @@ class HouseholdController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, string $search)
     {
-        return Household::all();
+        $perPage = $request->query('per_page', 7);
+
+        $query = Household::where('name', 'LIKE', "%{$search}%")
+            ->orWhere('identifier', 'LIKE', "%{$search}%");
+
+        $households = $query->paginate($perPage);
+
+        return response()->json($households);
     }
     public function list(User $user)
     {
