@@ -52,10 +52,10 @@ class UserController extends Controller
         $rules = [];
 
         if ($request->filled('name')) {
-            $rules['name'] = 'string';
+            $rules['name'] = 'string|max:20';
         }
         if ($request->filled('email')) {
-            $rules['email'] = 'required|email|unique:users,email,' . $user->id;
+            $rules['email'] = 'required|email|max:50|unique:users,email,' . $user->id;
         }
         if ($request->filled('password')) {
             $rules['password'] = 'string|min:8';
@@ -137,8 +137,8 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|string',
-            'email'    => 'required|email|unique:users',
+            'name'     => 'required|string|max:20',
+            'email'    => 'required|email|unique:users|max:50',
             'password' => 'required|string|min:8',
         ]);
 
@@ -167,7 +167,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => 'required|email|max:50',
             'password' => 'required|string|min:8',
         ]);
 

@@ -34,10 +34,10 @@ class GroceryController extends Controller
     public function store(Request $request, Household $household)
     {
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|string',
+            'name'     => 'required|string|max:20',
             'quantity'    => 'gte:0|integer|lte:999',
             'unit' => Rule::in(Grocery::getUnitTypes()),
-            'description' => 'string'
+            'description' => 'string|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -64,9 +64,9 @@ class GroceryController extends Controller
 
         Grocery::factory()->create([
             'name' => $validated['name'],
-            'quantity' => $validated['quantity'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'unit' => $validated['unit'] ?? null,
+            'quantity' => $validated['quantity'],
+            'description' => $validated['description'],
+            'unit' => $validated['unit'],
             'household_id' => $household->id,
             'user_id' => $authUser->id,
         ]);
@@ -98,10 +98,10 @@ class GroceryController extends Controller
     public function update(Request $request, Household $household, Grocery $grocery)
     {
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|string',
+            'name'     => 'required|string|max:20',
             'quantity'    => 'gte:0|integer|lte:999',
             'unit' => Rule::in(Grocery::getUnitTypes()),
-            'description' => 'string'
+            'description' => 'string|max:255'
         ]);
 
         if ($validator->fails()) {

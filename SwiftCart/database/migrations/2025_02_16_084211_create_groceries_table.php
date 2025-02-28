@@ -14,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('groceries', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 20);
             $table->integer('quantity')->nullable();
             $table->enum('unit', Grocery::getUnitTypes())->nullable();
-            $table->string('description')->nullable();
+            $table->string('description', 255)->nullable();
             $table->unsignedBigInteger('household_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

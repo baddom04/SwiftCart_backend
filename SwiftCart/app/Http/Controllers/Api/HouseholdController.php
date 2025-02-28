@@ -52,8 +52,8 @@ class HouseholdController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:5',
-            'identifier' => 'required|string|min:5|unique:households',
+            'name' => 'required|string|min:5|max:20',
+            'identifier' => 'required|string|min:5|unique:households|max:20',
         ]);
 
         if ($validator->fails()) {
@@ -94,11 +94,12 @@ class HouseholdController extends Controller
     public function update(Request $request, Household $household)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:5',
+            'name' => 'required|string|min:5|max:20',
             'identifier' => [
                 'required',
                 'string',
                 'min:5',
+                'max:20',
                 Rule::unique('households')->ignore($household->id),
             ]
         ]);

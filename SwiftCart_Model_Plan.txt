@@ -2,15 +2,15 @@
 
 User
 - ID - unique, primary key
-- username - string, at least 5 chars
+- username - string, at least 5 chars, max 20
 - password - string, at least 8 chars
-- email address - email, unique
+- email address - email, unique, max 50
 - isAdmin - bool, default: false
 
 Household
 - ID - unique, primary key
-- Display Name - string at least 5 chars
-- Identifier - string at least 5 chars
+- Display Name - string at least 5 chars, max 20
+- Identifier - string at least 5 chars, max 20
 - ownerUserID - unique
 
 User-household
@@ -25,10 +25,10 @@ HouseholdApplication
 
 Grocery
 - ID - unique, primary key
-- Name - string, not empty
+- Name - string, not empty, max 20
 - Quantity - integer, nullable
 - Unit type - enum, nullable (either both are null, or none)
-- Description - string, nullable
+- Description - string, nullable, max 255
 - householdID - unique
 - userID - unique
 
@@ -79,7 +79,7 @@ Connections
 
 Comment
 - ID - unique, primary key
-- Content - string, not emtpy
+- Content - string, not emtpy, max 255
 - userID - unique
 - groceryID - unique
 
