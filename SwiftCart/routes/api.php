@@ -22,9 +22,10 @@ Route::middleware('auth:sanctum')->group(
 
         //HouseholdController
         Route::post('households', [HouseholdController::class, 'store'])->name('api.households.store');
-        Route::get('households/{search}', [HouseholdController::class, 'index'])->name('api.households.index');
+        Route::get('households/{search?}', [HouseholdController::class, 'index'])->name('api.households.index');
         Route::get('households/{household}', [HouseholdController::class, 'show'])->where('household', '[0-9]+')->name('api.households.show');
         Route::get('households/{household}/users', [HouseholdController::class, 'list_users'])->where('household', '[0-9]+')->name('api.households.list_users');
+        Route::get('households/{household}/relationship', [HouseholdController::class, 'get_user_relationship'])->where('household', '[0-9]+')->name('api.households.get_user_relationship');
         Route::get('users/{user}/households', [HouseholdController::class, 'list'])->where('user', '[0-9]+')->name('api.households.list');
         Route::put('households/{household}', [HouseholdController::class, 'update'])->where('household', '[0-9]+')->name('api.households.update');
         Route::delete('households/{household}', [HouseholdController::class, 'destroy'])->where('household', '[0-9]+')->name('api.households.destroy');

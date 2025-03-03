@@ -26,7 +26,7 @@ class HouseholdApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Household $household)
+    public function store(Household $household)
     {
         $userID = Auth::user()->id;
         $householdID = $household->id;

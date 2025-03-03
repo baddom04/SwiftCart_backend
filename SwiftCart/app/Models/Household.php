@@ -13,6 +13,10 @@ class Household extends Model
     /** @use HasFactory<\Database\Factories\HouseholdFactory> */
     use HasFactory;
 
+    public static function getUserRelationship(): array
+    {
+        return ['nonnMember', 'member', 'owner', 'applied'];
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

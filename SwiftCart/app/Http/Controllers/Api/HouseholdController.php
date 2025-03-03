@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Household;
+use App\Models\HouseholdApplication;
 use App\Models\User;
 use App\Models\UserHousehold;
 use Illuminate\Validation\Rule;
@@ -17,12 +18,16 @@ class HouseholdController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, string $search)
+    public function index(Request $request, string $search = '')
     {
-        $perPage = $request->query('per_page', 7);
+        $perPage = $request->query('per_page', 5);
 
-        $query = Household::where('name', 'LIKE', "%{$search}%")
-            ->orWhere('identifier', 'LIKE', "%{$search}%");
+        $query = Household::query();
+
+        if (trim($search) !== '') {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('identifier', 'LIKE', "%{$search}%");
+        }
 
         $households = $query->paginate($perPage);
 
@@ -51,6 +56,30 @@ class HouseholdController extends Controller
         }
 
         return $household->users;
+    }
+    public function get_user_relationship(Household $household)
+    {
+        $authUser = Auth::user();
+        $relationships = Household::getUserRelationship();
+
+        if ($household->user->id === $authUser->id)
+            return response()->json($relationships[2]);
+
+        if (UserHousehold::where('household_id', $household->id)
+            ->where('user_id', $authUser->id)
+            ->exists()
+        ) {
+            return response()->json($relationships[1]);
+        }
+
+        if (HouseholdApplication::where('household_id', $household->id)
+            ->where('user_id', $authUser->id)
+            ->exists()
+        ) {
+            return response()->json($relationships[3]);
+        }
+
+        return response()->json($relationships[0]);
     }
 
     /**
