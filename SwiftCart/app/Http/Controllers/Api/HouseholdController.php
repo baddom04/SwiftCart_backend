@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\HouseholdResource;
 use App\Models\Household;
 use App\Models\HouseholdApplication;
 use App\Models\User;
@@ -10,7 +11,6 @@ use App\Models\UserHousehold;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class HouseholdController extends Controller
@@ -31,7 +31,7 @@ class HouseholdController extends Controller
 
         $households = $query->paginate($perPage);
 
-        return response()->json($households);
+        return HouseholdResource::collection($households);
     }
     public function list(User $user)
     {
@@ -63,23 +63,23 @@ class HouseholdController extends Controller
         $relationships = Household::getUserRelationship();
 
         if ($household->user->id === $authUser->id)
-            return response()->json($relationships[2]);
+            return $relationships[2];
 
         if (UserHousehold::where('household_id', $household->id)
             ->where('user_id', $authUser->id)
             ->exists()
         ) {
-            return response()->json($relationships[1]);
+            return $relationships[1];
         }
 
         if (HouseholdApplication::where('household_id', $household->id)
             ->where('user_id', $authUser->id)
             ->exists()
         ) {
-            return response()->json($relationships[3]);
+            return $relationships[3];
         }
 
-        return response()->json($relationships[0]);
+        return $relationships[0];
     }
 
     /**

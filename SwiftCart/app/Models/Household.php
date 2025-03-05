@@ -15,7 +15,7 @@ class Household extends Model
 
     public static function getUserRelationship(): array
     {
-        return ['nonnMember', 'member', 'owner', 'applied'];
+        return ['nonMember', 'member', 'owner', 'applied'];
     }
     public function user(): BelongsTo
     {
