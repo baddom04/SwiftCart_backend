@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('users/{user}/applications/households', [HouseholdApplicationController::class, 'get_sent_households'])->where('user', '[0-9]+')->name('api.household_applications.get_sent_households');
         Route::get('households/{household}/applications', [HouseholdApplicationController::class, 'get_received_applications'])->where('household', '[0-9]+')->name('api.household_applications.get_received_applications');
         Route::get('households/{household}/applications/users', [HouseholdApplicationController::class, 'get_received_users'])->where('household', '[0-9]+')->name('api.household_applications.get_received_users');
+        Route::get('users/{user}/households/{household}/application', [HouseholdApplicationController::class, 'find'])->where('user', '[0-9]+')->where('household', '[0-9]+')->name('api.household_applications.find');
         Route::post('applications/{application}', [HouseholdApplicationController::class, 'accept_user'])->where('application', '[0-9]+')->name('api.household_applications.accept_user');
         Route::delete('applications/{application}', [HouseholdApplicationController::class, 'destroy'])->where('application', '[0-9]+')->name('api.household_applications.destroy');
 

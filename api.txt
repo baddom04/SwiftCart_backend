@@ -33,6 +33,7 @@ Applications:
 ✅ GET: users/{user_id}/applications/households | No Body | Retrieves all of the households the logged in user sent an application to | Conditions: none
 ✅ GET: households/{household_id}/applications | No Body | Retrieves applications that got sent to the given household | Conditions: admin, or the logged in user is the owner of the household
 ✅ GET: households/{household_id}/applications/users | No Body | Retrieves users that sent applications to the given household | Conditions: admin, or the logged in user is the owner of the household
+✅ GET: users/{user_id}/households/{household_id}/application | No Body | Retrieves the application which the specified user sent to the specified household | Conditions: admin, or the logged in user's id matches the given user_id
 ✅ POST: applications/{id} | No Body | Creates a new UserHousehold, using the data of the application | Conditions: Admin, or if the logged in user is the owner of the household the application got sent to
 ✅ DELETE: applications/{id} | No Body | Deletes the application with the associated ID | Conditions: Admin, or the logged in user is either the one who sent it, or the owner of the household the application got sent to
 

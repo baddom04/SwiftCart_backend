@@ -172,4 +172,24 @@ class HouseholdApplicationController extends Controller
 
         return response()->json($users);
     }
+    public function find(User $user, Household $household)
+    {
+        $authUser = Auth::user();
+
+        if ($authUser->id !== $user->id && !$authUser->admin) {
+            return response()->json([
+                'error' => 'Unauthorized'
+            ], 403);
+        }
+
+        $application = HouseholdApplication::where('household_id', $household->id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$application) {
+            return response()->json(['message' => 'No matching application found'], 404);
+        }
+
+        return response()->json($application);
+    }
 }
