@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('users/{user}/households', [HouseholdController::class, 'list'])->where('user', '[0-9]+')->name('api.households.list');
         Route::put('households/{household}', [HouseholdController::class, 'update'])->where('household', '[0-9]+')->name('api.households.update');
         Route::delete('households/{household}', [HouseholdController::class, 'destroy'])->where('household', '[0-9]+')->name('api.households.destroy');
+        Route::delete('households/{household}/users/{user}', [HouseholdController::class, 'removeMember'])->where('household', '[0-9]+')->where('user', '[0-9]+')->name('api.households.removeMember');
 
         //HouseholdApplicationController
         Route::post('households/{household}/applications', [HouseholdApplicationController::class, 'store'])->where('household', '[0-9]+')->name('api.household_applications.store');

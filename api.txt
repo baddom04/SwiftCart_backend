@@ -24,6 +24,7 @@ Households:
 ✅ GET: households/{id} | No Body | Retrieves the specified household | Conditions: none
 ✅ GET: users/{user_id}/households | No Body | Retrieves all of the currently logged in users households | Conditions: user_id is the logged in user or admin
 ✅ DELETE: households/{id} | No Body | Deletes the households with the associated ID | Conditions: The logged in user is either admin or the owner of the household
+✅ DELETE: households/{id}/users/{id} | No Body | Removes the member from the household | Conditions: The logged in user is either admin or the owner of the household, and the given id is indeed a member
 ✅ PUT: households/{id} | { "name": "MyHousehold", "identifier" : "my_household123" } | Updates the household with the associated ID | Conditions: The logged in user is either admin or the owner of the household
 
 Applications: 

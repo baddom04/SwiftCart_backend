@@ -182,4 +182,47 @@ class HouseholdController extends Controller
             'Message' => 'Household deleted successfully'
         ], 200);
     }
+
+    public function removeMember(Household $household, User $user)
+    {
+        $authUser = Auth::user();
+
+        if (
+            !$authUser->admin &&
+            $household->user_id !== $authUser->id &&
+            $authUser->id !== $user->id
+        ) {
+            return response()->json(['error' => 'Unauthorized.'], 403);
+        }
+
+        $isOwner = $household->user_id === $user->id;
+        $isMember = $household->users()->where('users.id', $user->id)->exists();
+
+        if (!$isOwner && !$isMember) {
+            return response()->json(['error' => 'User not found in household.'], 404);
+        }
+
+        if (!$isOwner) {
+            $household->users()->detach($user->id);
+            return response()->json(['message' => 'User removed from household.'], 200);
+        }
+
+        $members = $household->users()->where('users.id', '!=', $user->id)->get();
+
+        if ($members->isEmpty()) {
+            $household->delete();
+            return response()->json(['message' => 'Household deleted (only owner existed).'], 200);
+        } else {
+            $newOwner = $members->first();
+            $household->user_id = $newOwner->id;
+            $household->save();
+
+            $household->users()->detach($user->id);
+
+            return response()->json([
+                'message' => 'Ownership transferred and user removed from household.',
+                'new_owner_id' => $newOwner->id
+            ], 200);
+        }
+    }
 }
