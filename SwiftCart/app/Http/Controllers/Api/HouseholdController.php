@@ -43,7 +43,7 @@ class HouseholdController extends Controller
             ], 403);
         }
 
-        return $user->memberHouseholds;
+        return HouseholdResource::collection($user->memberHouseholds);
     }
     public function list_users(Household $household)
     {
@@ -130,11 +130,10 @@ class HouseholdController extends Controller
     public function update(Request $request, Household $household)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:5|max:20',
+            'name' => 'required|string|max:20',
             'identifier' => [
                 'required',
                 'string',
-                'min:5',
                 'max:20',
                 Rule::unique('households')->ignore($household->id),
             ]
