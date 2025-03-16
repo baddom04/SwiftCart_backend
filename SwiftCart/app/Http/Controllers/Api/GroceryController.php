@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GroceryResource;
 use App\Models\Grocery;
 use App\Models\Household;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class GroceryController extends Controller
             ], 403);
         }
 
-        return $household->groceries;
+        return GroceryResource::collection($household->groceries);
     }
 
     /**
