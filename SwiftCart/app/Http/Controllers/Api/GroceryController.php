@@ -7,6 +7,7 @@ use App\Models\Grocery;
 use App\Models\Household;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -33,11 +34,12 @@ class GroceryController extends Controller
      */
     public function store(Request $request, Household $household)
     {
+        Log::info($request['unit']);
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:20',
-            'quantity'    => 'gte:0|integer|lte:999',
-            'unit' => Rule::in(Grocery::getUnitTypes()),
-            'description' => 'string|max:255'
+            'quantity'    => 'nullable|gte:0|integer|lte:999',
+            'unit' => ['nullable', Rule::in(Grocery::getUnitTypes())],
+            'description' => 'nullable|string|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -99,9 +101,9 @@ class GroceryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:20',
-            'quantity'    => 'gte:0|integer|lte:999',
-            'unit' => Rule::in(Grocery::getUnitTypes()),
-            'description' => 'string|max:255'
+            'quantity'    => 'nullable|gte:0|integer|lte:999',
+            'unit' => ['nullable', Rule::in(Grocery::getUnitTypes())],
+            'description' => 'nullable|string|max:255'
         ]);
 
         if ($validator->fails()) {
