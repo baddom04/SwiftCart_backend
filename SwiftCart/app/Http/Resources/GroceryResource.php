@@ -22,6 +22,7 @@ class GroceryResource extends JsonResource
             'description' => $this->description,
             'household_id' => $this->household_id,
             'user_id' => $this->user_id,
+            'comment_count' => $this->comments->count(),
             'user' => $this->user
         ];
     }

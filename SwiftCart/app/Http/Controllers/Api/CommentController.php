@@ -86,7 +86,7 @@ class CommentController extends Controller
             return response()->json(['error' => 'Unauthenticated'], 403);
         }
 
-        $comment->content == '[Comment deleted]';
+        $comment->content = '[Comment deleted]';
         $comment->save();
 
         return response()->json(['Message' => 'Comment deleted successfully'], 200);
