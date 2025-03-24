@@ -42,27 +42,38 @@ Connections
 
 [MVP+]
 
-User
-- shopID - unique, nullable
-
-Shop
+Store
 - ID - unique, primary key
-- Name - string, not empty
-- Location [TODO how]
-- mapID - unique, nullable
+- Name - string, not empty, unique
+- userID - unique
 
 Map
 - ID - unique, primary key
 - Horizontal size - integer
 - Vertical size - integer
-- shopID - unique
+- storeID - unique
+
+Location
+- ID - unique, primary key
+- storeID
+- country
+- zip code
+- city
+- street (street name, house number)
+- detail (which floor, door number)
+
+Section
+- ID - unique, primary key
+- Name - string, unique
+- mapID - unique
 
 Map segment
 - ID - unique, primary key
 - horizontal index - integer
 - vertical index - integer
-- type - enum (product container [shelf, fridge etc.], empty space, outside of shop, cashier, entry, wall etc.)
+- type - enum (product container [shelf, fridge etc.], empty space, outside of store, cashier, entry, wall etc.)
 - mapID - unique
+- sectionID - nullable 
 
 Product
 - ID - unique, primary key
@@ -71,7 +82,10 @@ Product
 - mapSegmentID - unique
 
 Connections
-- Shop - map  ->  1 to 1
+- store - location -> 1 to 1
+- store - map  ->  1 to 1
+- store - section -> 1 to many
+- Section to map segment -> 1 to many
 - Map - map segment  ->  1 to many
 - Map segment - product  ->  1 to many 
 
@@ -83,7 +97,7 @@ Comment
 - userID - unique
 - groceryID - unique
 
-Shop
+store
 - preview image
 
 Product
