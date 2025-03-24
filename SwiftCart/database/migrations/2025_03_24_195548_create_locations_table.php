@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('country');
             $table->char('zip_code', 4);
             $table->string('city');
             $table->string('street');
             $table->string('detail');
             $table->unsignedBigInteger('store_id');
+            $table->timestamps();
 
+            $table->unique(['country', 'zip_code', 'city', 'street', 'detail']);
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
         });
     }

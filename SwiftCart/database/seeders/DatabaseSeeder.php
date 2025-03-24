@@ -6,10 +6,15 @@ use App\Models\Grocery;
 use App\Models\Household;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Location;
+use App\Models\Map;
+use App\Models\MapSegment;
+use App\Models\Product;
+use App\Models\Section;
+use App\Models\Store;
 use App\Models\UserHousehold;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -48,5 +53,37 @@ class DatabaseSeeder extends Seeder
             'password' => 'password',
             'admin' => false,
         ]);
+
+        Store::factory(5)->create()->each(function ($store) {
+
+            Location::factory()->create([
+                'store_id' => $store->id,
+            ]);
+
+            $map = Map::factory()->create([
+                'store_id' => $store->id,
+            ]);
+
+            $sections = Section::factory(8)->create([
+                'map_id' => $map->id,
+            ]);
+
+
+            for ($x = 0; $x < $map->x_size; $x++) {
+                for ($y = 0; $y < $map->y_size; $y++) {
+                    $segment = MapSegment::factory()->make();
+                    $segment->x = $x;
+                    $segment->y = $y;
+                    $segment->map_id = $map->id;
+                    $segment->section_id = rand(0, 1) ? $sections->random()->id : null;
+                    $segment->save();
+
+                    $productCount = rand(1, 3);
+                    Product::factory($productCount)->create([
+                        'map_segment_id' => $segment->id,
+                    ]);
+                }
+            }
+        });
     }
 }

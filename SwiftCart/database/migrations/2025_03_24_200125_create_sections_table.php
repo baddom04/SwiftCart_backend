@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('name')->unique();
             $table->unsignedBigInteger('map_id');
+            $table->timestamps();
 
             $table->foreign('map_id')->references('id')->on('maps')->onDelete('cascade');
         });

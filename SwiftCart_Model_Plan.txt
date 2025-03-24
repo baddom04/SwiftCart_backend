@@ -56,11 +56,11 @@ Map
 Location
 - ID - unique, primary key
 - storeID
-- country
-- zip code
-- city
-- street (street name, house number)
-- detail (which floor, door number)
+- country - string
+- zip code - char, 4
+- city - string
+- street - string
+- detail - string, nullable
 
 Section
 - ID - unique, primary key
@@ -78,6 +78,7 @@ Map segment
 Product
 - ID - unique, primary key
 - Name - string, not empty
+- Brand - string, not empty
 - Description - string, nullable
 - mapSegmentID - unique
 

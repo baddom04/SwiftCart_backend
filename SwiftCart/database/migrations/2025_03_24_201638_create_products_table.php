@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->string('table');
+            $table->string('name');
+            $table->string('brand');
             $table->string('description');
             $table->unsignedBigInteger('map_segment_id');
+            $table->timestamps();
 
             $table->foreign('map_segment_id')->references('id')->on('map_segments')->onDelete('cascade');
         });

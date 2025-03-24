@@ -14,13 +14,14 @@ return new class extends Migration
     {
         Schema::create('map_segments', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->unsignedInteger('x');
             $table->unsignedInteger('y');
             $table->unsignedBigInteger('map_id');
             $table->unsignedBigInteger('section_id')->nullable();
             $table->enum('type', MapSegment::getSegmentTypes());
+            $table->timestamps();
 
+            $table->unique(['x', 'y', 'map_id']);
             $table->foreign('map_id')->references('id')->on('maps')->onDelete('cascade');
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
         });
