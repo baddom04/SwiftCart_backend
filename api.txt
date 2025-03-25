@@ -51,3 +51,4 @@ Comments:
 ✅ POST: households/{household_id}/groceries/{grocery_id} | Body example: { "content": "Ezt én nem veszem meg" } | Creates a new comment for a grocery | Conditions: Admin, or user has to be in the given household
 ✅ GET: households/{household_id}/groceries/{grocery_id}/comments | No Body | Queries all comments related to the grocery | Conditions: Admin, or user has to be in the given household
 ✅ DELETE: households/{household_id}/groceries/{grocery_id}/comments/{id} | No Body | Deletes the given comment | Conditions: Admin, and the user has to be the creator of the comment
+

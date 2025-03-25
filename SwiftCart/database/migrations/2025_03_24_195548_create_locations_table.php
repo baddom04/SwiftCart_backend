@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('street');
             $table->string('detail');
-            $table->unsignedBigInteger('store_id');
+            $table->unsignedBigInteger('store_id')->unique();
             $table->timestamps();
 
             $table->unique(['country', 'zip_code', 'city', 'street', 'detail']);

@@ -10,16 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Store extends Model
 {
     use HasFactory;
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    public function map() : HasOne
+    public function map(): HasOne
     {
         return $this->hasOne(Map::class);
     }
-    public function location() : HasOne 
+    public function location(): HasOne
     {
-        return $this->hasOne(Location::class);    
+        return $this->hasOne(Location::class);
     }
 }
