@@ -13,9 +13,27 @@ class StoreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $stores = Store::with('location')->get();
+        $search = $request->query('search', '');
+        $perPage = $request->query('per_page', 5);
+
+        $query = Store::query();
+
+        if (trim($search) !== '') {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhereHas('location', function ($query) use ($search) {
+                    $query->where('country', 'LIKE', "%{$search}%")
+                        ->orWhere('city', 'LIKE', "%{$search}%")
+                        ->orWhere('zipcode', 'LIKE', "%{$search}%")
+                        ->orWhere('street', 'LIKE', "%{$search}%")
+                        ->orWhere('detail', 'LIKE', "%{$search}%");
+                });
+        }
+
+        $stores = $query->paginate($perPage);
+        $stores->load('location');
+
         return $stores;
     }
 

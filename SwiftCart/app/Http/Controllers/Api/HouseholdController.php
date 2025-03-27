@@ -18,8 +18,9 @@ class HouseholdController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, string $search = '')
+    public function index(Request $request)
     {
+        $search = $request->query('search', '');
         $perPage = $request->query('per_page', 5);
 
         $query = Household::query();

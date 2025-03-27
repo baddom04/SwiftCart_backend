@@ -13,10 +13,10 @@ class MapSegment extends Model
     use HasFactory;
     public static function getSegmentTypes(): array
     {
-        return ['shelf', 'fridge', 'empty', 'outside', 'cash_register', 'entrance', 'wall'];
+        return ['shelf', 'fridge', 'empty', 'outside', 'cashregister', 'entrance', 'wall'];
     }
 
-    public function section() : BelongsTo
+    public function section(): BelongsTo
     {
         return $this->belongsTo(Section::class);
     }
@@ -25,7 +25,7 @@ class MapSegment extends Model
     {
         return $this->belongsTo(Map::class);
     }
-    public function products() : HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }

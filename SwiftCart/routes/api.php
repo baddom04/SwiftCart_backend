@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(
 
         //HouseholdController
         Route::post('households', [HouseholdController::class, 'store'])->name('api.households.store');
-        Route::get('households/{search?}', [HouseholdController::class, 'index'])->name('api.households.index');
+        Route::get('households/search', [HouseholdController::class, 'index'])->name('api.households.index');
         Route::get('households/{household}', [HouseholdController::class, 'show'])->where('household', '[0-9]+')->name('api.households.show');
         Route::get('households/{household}/users', [HouseholdController::class, 'list_users'])->where('household', '[0-9]+')->name('api.households.list_users');
         Route::get('households/{household}/relationship', [HouseholdController::class, 'get_user_relationship'])->where('household', '[0-9]+')->name('api.households.get_user_relationship');
@@ -61,7 +61,7 @@ Route::middleware('auth:sanctum')->group(
         Route::delete('households/{household}/groceries/{grocery}/comments/{comment}', [CommentController::class, 'destroy'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->where('comment', '[0-9]+')->name('api.comments.destroy');
 
         //StoreController
-        Route::get('stores', [StoreController::class, 'index'])->name('api.stores.index');
+        Route::get('stores/search', [StoreController::class, 'index'])->name('api.stores.index');
         Route::get('stores/{store}', [StoreController::class, 'show'])->where('store', '[0-9]+')->name('api.stores.show');
         Route::post('stores', [StoreController::class, 'store'])->name('api.stores.store');
         Route::middleware([CheckStoreOwner::class])->group(function () {
