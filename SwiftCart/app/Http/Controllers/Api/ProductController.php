@@ -30,6 +30,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:20',
                 'brand' => 'required|string|max:20',
                 'description' => 'required|string|max:255',
+                'price' => 'required|decimal:2'
             ]
         );
 
@@ -45,6 +46,7 @@ class ProductController extends Controller
             'name' => $validated['name'],
             'brand' => $validated['brand'],
             'description' => $validated['description'],
+            'price' => $validated['price'],
             'map_segment_id' => $segment->id,
         ]);
 
@@ -77,6 +79,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:20',
                 'brand' => 'required|string|max:20',
                 'description' => 'required|string|max:255',
+                'price' => 'required|decimal:2'
             ]
         );
 
@@ -91,6 +94,7 @@ class ProductController extends Controller
         $product->name = $validated['name'];
         $product->brand = $validated['brand'];
         $product->description = $validated['description'];
+        $product->price = $validated['price'];
         $product->save();
 
         return response()->json(['Message' => 'Product updated successfully'], 200);
