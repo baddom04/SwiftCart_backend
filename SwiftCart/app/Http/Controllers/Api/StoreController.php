@@ -20,6 +20,8 @@ class StoreController extends Controller
 
         $query = Store::query();
 
+        $query->has('location')->has('map');
+
         if (trim($search) !== '') {
             $query->where('name', 'LIKE', "%{$search}%")
                 ->orWhereHas('location', function ($query) use ($search) {
