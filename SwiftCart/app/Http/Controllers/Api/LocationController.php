@@ -41,7 +41,7 @@ class LocationController extends Controller
 
         $validated = $validator->validated();
 
-        Location::factory()->create([
+        $location = Location::factory()->create([
             'country' => $validated['country'],
             'zip_code' => $validated['zip_code'],
             'city' => $validated['city'],
@@ -50,7 +50,7 @@ class LocationController extends Controller
             'store_id' => $store->id,
         ]);
 
-        return response()->json(['Message' => 'Location created successfully'], 200);
+        return $location;
     }
 
     /**

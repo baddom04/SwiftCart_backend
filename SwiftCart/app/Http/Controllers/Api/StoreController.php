@@ -67,12 +67,12 @@ class StoreController extends Controller
 
         $validated = $validator->validated();
 
-        Store::factory()->create([
+        $store = Store::factory()->create([
             'name' => $validated['name'],
             'user_id' => $user->id,
         ]);
 
-        return response()->json(['Message' => 'Store created successfully'], 200);
+        return $store;
     }
 
     /**
