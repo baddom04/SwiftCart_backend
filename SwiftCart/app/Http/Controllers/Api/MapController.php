@@ -37,13 +37,13 @@ class MapController extends Controller
 
         $validated = $validator->validated();
 
-        Map::factory()->create([
+        $map = Map::factory()->create([
             'x_size' => $validated['x_size'],
             'y_size' => $validated['y_size'],
             'store_id' => $store->id,
         ]);
 
-        return response()->json(['Message' => 'Map created successfully'], 200);
+        return $map;
     }
 
     /**
@@ -85,7 +85,7 @@ class MapController extends Controller
         $store->map->x_size = $validated['x_size'];
         $store->map->save();
 
-        return response()->json(['Message' => 'Map updated successfully'], 200);
+        return $store->map;
     }
 
     /**
