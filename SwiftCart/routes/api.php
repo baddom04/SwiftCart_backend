@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(
 
         //StoreController
         Route::get('stores/search', [StoreController::class, 'index'])->name('api.stores.index');
+        Route::get('stores/my', [StoreController::class, 'get_my_store'])->name('api.stores.get_my_store');
         Route::get('stores/{store}', [StoreController::class, 'show'])->where('store', '[0-9]+')->name('api.stores.show');
         Route::post('stores', [StoreController::class, 'store'])->name('api.stores.store');
         Route::middleware([CheckStoreOwner::class])->group(function () {

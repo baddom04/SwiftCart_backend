@@ -126,4 +126,25 @@ class StoreController extends Controller
         $store->delete();
         return response()->json(['Message' => 'Store deleted successfully'], 200);
     }
+
+    public function get_my_store()
+    {
+        $user = Auth::user();
+
+        if ($user->store === null)
+            return response()->json(null, 204);
+
+        $store = $user->store;
+
+        if ($store->location !== null)
+            $store->load('location');
+
+        if ($store->map !== null) {
+            $store->load('map');
+            $store->map->load('sections');
+            $store->map->load('map_segments');
+            $store->map->map_segments->load('products');
+        }
+        return $store;
+    }
 }

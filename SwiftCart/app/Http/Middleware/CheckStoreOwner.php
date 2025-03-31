@@ -32,7 +32,7 @@ class CheckStoreOwner
             }
         }
 
-        if (!$store || $store->user_id !== Auth::id()) {
+        if ((!$store || $store->user_id !== Auth::id()) && !Auth::user()->admin) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
