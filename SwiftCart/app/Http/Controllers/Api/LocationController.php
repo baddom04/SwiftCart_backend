@@ -98,7 +98,7 @@ class LocationController extends Controller
         $store->location->detail = $validated['detail'];
         $store->location->save();
 
-        return response()->json(['Message' => 'Location updated successfully'], 200);
+        return $store->location;
     }
 
     /**

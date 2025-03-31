@@ -111,7 +111,7 @@ class StoreController extends Controller
         $store->name = $validated['name'];
         $store->save();
 
-        return response()->json(['Message' => 'Store updated successfully'], 200);
+        return $store;
     }
 
     /**
