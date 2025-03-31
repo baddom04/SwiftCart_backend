@@ -80,11 +80,15 @@ class StoreController extends Controller
      */
     public function show(Store $store)
     {
-        $store->load('location');
-        $store->load('map');
-        $store->map->load('sections');
-        $store->map->load('map_segments');
-        $store->map->map_segments->load('products');
+        if ($store->location !== null)
+            $store->load('location');
+
+        if ($store->map !== null) {
+            $store->load('map');
+            $store->map->load('sections');
+            $store->map->load('map_segments');
+            $store->map->map_segments->load('products');
+        }
         return $store;
     }
 
