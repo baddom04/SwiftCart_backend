@@ -16,16 +16,16 @@ class MapController extends Controller
     public function store(Request $request, Store $store)
     {
         if ($store->map !== null) {
-            return response([
+            return response()->json([
                 'error' => 'The map to this store already exists'
-            ], 400)->json();
+            ], 400);
         }
 
         $validator = Validator::make(
             $request->all(),
             [
-                'x_size' => 'required|integer|min:1|max:100',
-                'y_size' => 'required|integer|min:1|max:100',
+                'x_size' => 'required|integer|min:2|max:100',
+                'y_size' => 'required|integer|min:2|max:100',
             ]
         );
 
@@ -68,8 +68,8 @@ class MapController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'x_size' => 'required|integer|min:1|max:100',
-                'y_size' => 'required|integer|min:1|max:100',
+                'x_size' => 'required|integer|min:2|max:100',
+                'y_size' => 'required|integer|min:2|max:100',
             ]
         );
 
