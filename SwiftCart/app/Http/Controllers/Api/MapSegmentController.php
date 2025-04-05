@@ -44,7 +44,7 @@ class MapSegmentController extends Controller
 
         $validated = $validator->validated();
 
-        MapSegment::factory()->create([
+        $segment = MapSegment::factory()->create([
             'section_id' => $validated['section_id'],
             'x' => $validated['x'],
             'y' => $validated['y'],
@@ -52,7 +52,7 @@ class MapSegmentController extends Controller
             'map_id' => $map->id,
         ]);
 
-        return response()->json(['Message' => 'MapSegment created successfully'], 200);
+        return $segment;
     }
 
     /**
@@ -91,7 +91,7 @@ class MapSegmentController extends Controller
         $segment->type = $validated['type'];
         $segment->save();
 
-        return response()->json(['Message' => 'MapSegment updated successfully'], 200);
+        return $segment;
     }
 
     /**

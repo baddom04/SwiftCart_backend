@@ -85,6 +85,11 @@ class MapController extends Controller
         $store->map->x_size = $validated['x_size'];
         $store->map->save();
 
+        $store->map->segments()->where(function ($query) use ($validated) {
+            $query->where('x', '>=', $validated['x_size'])
+                ->orWhere('y', '>=', $validated['y_size']);
+        })->delete();
+
         return $store->map;
     }
 
