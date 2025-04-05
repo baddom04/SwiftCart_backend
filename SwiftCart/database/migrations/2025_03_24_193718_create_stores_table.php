@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
             $table->string("name", 50)->unique();
+            $table->boolean('published')->default(false);
             $table->unsignedBigInteger('user_id')->unique();
             $table->timestamps();
 

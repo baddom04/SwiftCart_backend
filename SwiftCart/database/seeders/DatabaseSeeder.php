@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             'admin' => false,
         ]);
 
-        Store::factory(5)->create()->each(function ($store) {
+        $stores = Store::factory(5)->create()->each(function ($store) {
 
             Location::factory()->create([
                 'store_id' => $store->id,
@@ -85,5 +85,9 @@ class DatabaseSeeder extends Seeder
                 }
             }
         });
+        foreach ($stores as $store) {
+            $store->published = true;
+            $store->save();
+        }
     }
 }

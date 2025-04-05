@@ -20,11 +20,7 @@ class StoreController extends Controller
 
         $query = Store::query();
 
-        $query->has('location')
-            ->has('map')
-            ->whereHas('map', function ($q) {
-                $q->has('map_segments');
-            });
+        $query->where('published', 1);
 
         if (trim($search) !== '') {
             $query->where('name', 'LIKE', "%{$search}%")
