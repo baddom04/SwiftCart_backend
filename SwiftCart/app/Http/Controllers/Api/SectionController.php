@@ -39,12 +39,12 @@ class SectionController extends Controller
 
         $validated = $validator->validated();
 
-        Section::factory()->create([
+        $section = Section::factory()->create([
             'name' => $validated['name'],
             'map_id' => $map->id,
         ]);
 
-        return response()->json(['Message' => 'Section created successfully'], 200);
+        return $section;
     }
 
     /**
@@ -81,7 +81,7 @@ class SectionController extends Controller
         $section->name = $validated['name'];
         $section->save();
 
-        return response()->json(['Message' => 'Section updated successfully'], 200);
+        return $section;
     }
 
     /**

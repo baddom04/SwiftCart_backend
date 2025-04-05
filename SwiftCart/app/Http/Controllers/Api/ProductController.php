@@ -42,7 +42,7 @@ class ProductController extends Controller
 
         $validated = $validator->validated();
 
-        Product::factory()->create([
+        $product = Product::factory()->create([
             'name' => $validated['name'],
             'brand' => $validated['brand'],
             'description' => $validated['description'],
@@ -50,7 +50,7 @@ class ProductController extends Controller
             'map_segment_id' => $segment->id,
         ]);
 
-        return response()->json(['Message' => 'Product created successfully'], 200);
+        return $product;
     }
 
     /**
@@ -97,7 +97,7 @@ class ProductController extends Controller
         $product->price = $validated['price'];
         $product->save();
 
-        return response()->json(['Message' => 'Product updated successfully'], 200);
+        return $product;
     }
 
     /**

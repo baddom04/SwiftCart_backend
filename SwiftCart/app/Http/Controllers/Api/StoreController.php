@@ -101,6 +101,7 @@ class StoreController extends Controller
             $request->all(),
             [
                 'name' => 'required|string|max:50',
+                'published' => 'required|boolean'
             ]
         );
 
@@ -113,6 +114,7 @@ class StoreController extends Controller
         $validated = $validator->validated();
 
         $store->name = $validated['name'];
+        $store->published = $validated['published'];
         $store->save();
 
         return $store;
