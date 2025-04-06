@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('brand');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('map_segment_id');
             $table->timestamps();
