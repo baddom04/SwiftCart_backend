@@ -87,7 +87,7 @@ class HouseholdApplicationController extends Controller
         if ($authUser->id !== $application->user->id && !$authUser->admin && $authUser->id !== $application->household->user->id) {
             return response()->json([
                 'error' => 'Unauthorized'
-            ], 403);
+            ], 401);
         }
 
         $application->delete();
@@ -102,7 +102,7 @@ class HouseholdApplicationController extends Controller
         if (!$authUser->admin && $authUser->id !== $application->household->user->id) {
             return response()->json([
                 'error' => 'Unauthorized'
-            ], 403);
+            ], 401);
         }
 
         UserHousehold::factory()->create(['user_id' => $application->user->id, 'household_id' => $application->household->id]);
@@ -113,57 +113,25 @@ class HouseholdApplicationController extends Controller
     }
     public function get_sent_applications(User $user)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && $authUser->id !== $user->id) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         return HouseholdApplication::where('user_id', $user->id)->get();
     }
     public function get_sent_households(User $user)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && $authUser->id !== $user->id) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $householdIds = HouseholdApplication::where('user_id', $user->id)
             ->pluck('household_id')
             ->unique();
 
         $households = Household::whereIn('id', $householdIds)->get();
 
-        return response()->json($households);
+        return $households;
     }
     public function get_received_applications(Request $request, Household $household)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && $authUser->id !== $household->user->id) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         return HouseholdApplication::where('household_id', $household->id)->get();
     }
 
     public function get_received_users(Household $household)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && $authUser->id !== $household->user->id) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $userIds = HouseholdApplication::where('household_id', $household->id)
             ->pluck('user_id')
             ->unique();
@@ -174,14 +142,6 @@ class HouseholdApplicationController extends Controller
     }
     public function find(User $user, Household $household)
     {
-        $authUser = Auth::user();
-
-        if ($authUser->id !== $user->id && !$authUser->admin) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $application = HouseholdApplication::where('household_id', $household->id)
             ->where('user_id', $user->id)
             ->first();
@@ -190,6 +150,6 @@ class HouseholdApplicationController extends Controller
             return response()->json(['message' => 'No matching application found'], 404);
         }
 
-        return response()->json($application);
+        return $application;
     }
 }

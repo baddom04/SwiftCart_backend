@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Middleware\CheckCommentOwner;
+use App\Http\Middleware\CheckGroceryOwner;
 use App\Http\Middleware\CheckHouseholdMember;
 use App\Http\Middleware\CheckHouseholdOwner;
 use App\Http\Middleware\CheckStoreOwner;
@@ -51,25 +53,37 @@ Route::middleware('auth:sanctum')->group(
 
         //HouseholdApplicationController
         Route::post('households/{household}/applications', [HouseholdApplicationController::class, 'store'])->where('household', '[0-9]+')->name('api.household_applications.store');
-        Route::get('users/{user}/applications', [HouseholdApplicationController::class, 'get_sent_applications'])->where('user', '[0-9]+')->name('api.household_applications.get_sent_applications');
-        Route::get('users/{user}/applications/households', [HouseholdApplicationController::class, 'get_sent_households'])->where('user', '[0-9]+')->name('api.household_applications.get_sent_households');
-        Route::get('households/{household}/applications', [HouseholdApplicationController::class, 'get_received_applications'])->where('household', '[0-9]+')->name('api.household_applications.get_received_applications');
-        Route::get('households/{household}/applications/users', [HouseholdApplicationController::class, 'get_received_users'])->where('household', '[0-9]+')->name('api.household_applications.get_received_users');
-        Route::get('users/{user}/households/{household}/application', [HouseholdApplicationController::class, 'find'])->where('user', '[0-9]+')->where('household', '[0-9]+')->name('api.household_applications.find');
         Route::post('applications/{application}', [HouseholdApplicationController::class, 'accept_user'])->where('application', '[0-9]+')->name('api.household_applications.accept_user');
         Route::delete('applications/{application}', [HouseholdApplicationController::class, 'destroy'])->where('application', '[0-9]+')->name('api.household_applications.destroy');
+        Route::middleware([CheckUserOwner::class])->group(function () {
+            Route::get('users/{user}/applications', [HouseholdApplicationController::class, 'get_sent_applications'])->where('user', '[0-9]+')->name('api.household_applications.get_sent_applications');
+            Route::get('users/{user}/applications/households', [HouseholdApplicationController::class, 'get_sent_households'])->where('user', '[0-9]+')->name('api.household_applications.get_sent_households');
+            Route::get('users/{user}/households/{household}/application', [HouseholdApplicationController::class, 'find'])->where('user', '[0-9]+')->where('household', '[0-9]+')->name('api.household_applications.find');
+        });
+        Route::middleware([CheckHouseholdOwner::class])->group(function () {
+            Route::get('households/{household}/applications', [HouseholdApplicationController::class, 'get_received_applications'])->where('household', '[0-9]+')->name('api.household_applications.get_received_applications');
+            Route::get('households/{household}/applications/users', [HouseholdApplicationController::class, 'get_received_users'])->where('household', '[0-9]+')->name('api.household_applications.get_received_users');
+        });
 
         //GroceryController
-        Route::post('households/{household}/groceries', [GroceryController::class, 'store'])->where('household', '[0-9]+')->name('api.groceries.store');
-        Route::put('households/{household}/groceries/{grocery}', [GroceryController::class, 'update'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.update');
-        Route::get('households/{household}/groceries', [GroceryController::class, 'index'])->where('household', '[0-9]+')->name('api.groceries.index');
-        Route::get('households/{household}/groceries/{grocery}', [GroceryController::class, 'show'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.show');
-        Route::delete('households/{household}/groceries/{grocery}', [GroceryController::class, 'destroy'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.destroy');
+        Route::middleware([CheckHouseholdMember::class])->group(function () {
+            Route::post('households/{household}/groceries', [GroceryController::class, 'store'])->where('household', '[0-9]+')->name('api.groceries.store');
+            Route::get('households/{household}/groceries', [GroceryController::class, 'index'])->where('household', '[0-9]+')->name('api.groceries.index');
+            Route::get('households/{household}/groceries/{grocery}', [GroceryController::class, 'show'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.show');
+            Route::delete('households/{household}/groceries/{grocery}', [GroceryController::class, 'destroy'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.destroy');
+            Route::middleware([CheckGroceryOwner::class])->group(function () {
+                Route::put('households/{household}/groceries/{grocery}', [GroceryController::class, 'update'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.groceries.update');
+            });
+        });
 
         //CommentController
-        Route::post('households/{household}/groceries/{grocery}', [CommentController::class, 'store'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.comments.store');
-        Route::get('households/{household}/groceries/{grocery}/comments', [CommentController::class, 'index'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.comments.index');
-        Route::delete('households/{household}/groceries/{grocery}/comments/{comment}', [CommentController::class, 'destroy'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->where('comment', '[0-9]+')->name('api.comments.destroy');
+        Route::middleware([CheckHouseholdMember::class])->group(function () {
+            Route::get('households/{household}/groceries/{grocery}/comments', [CommentController::class, 'index'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.comments.index');
+            Route::post('households/{household}/groceries/{grocery}', [CommentController::class, 'store'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->name('api.comments.store');
+            Route::middleware([CheckCommentOwner::class])->group(function () {
+                Route::delete('households/{household}/groceries/{grocery}/comments/{comment}', [CommentController::class, 'destroy'])->where('household', '[0-9]+')->where('grocery', '[0-9]+')->where('comment', '[0-9]+')->name('api.comments.destroy');
+            });
+        });
 
         //StoreController
         Route::get('stores/search', [StoreController::class, 'index'])->name('api.stores.index');

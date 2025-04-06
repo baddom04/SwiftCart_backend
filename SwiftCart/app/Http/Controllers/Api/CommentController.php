@@ -18,12 +18,6 @@ class CommentController extends Controller
      */
     public function index(Household $household, Grocery $grocery)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id)) {
-            return response()->json(['error' => 'Unauthenticated'], 403);
-        }
-
         $grocery->comments->load('user');
         return $grocery->comments;
     }
@@ -45,16 +39,10 @@ class CommentController extends Controller
 
         $validated = $validator->validated();
 
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id)) {
-            return response()->json(['error' => 'Unauthenticated'], 403);
-        }
-
         Comment::factory()->create([
             'content' => $validated['content'],
             'grocery_id' => $grocery->id,
-            'user_id' => $authUser->id,
+            'user_id' => Auth::id(),
         ]);
 
         return response()->json(['Message' => 'Comment created successfully'], 200);
@@ -83,7 +71,7 @@ class CommentController extends Controller
     {
         $authUser = Auth::user();
 
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id) && $grocery->user->id !== $authUser->id) {
+        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id) && $comment->user->id !== $authUser->id) {
             return response()->json(['error' => 'Unauthenticated'], 403);
         }
 

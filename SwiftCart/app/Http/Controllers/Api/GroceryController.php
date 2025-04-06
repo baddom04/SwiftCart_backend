@@ -19,14 +19,6 @@ class GroceryController extends Controller
      */
     public function index(Household $household)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         return GroceryResource::collection($household->groceries);
     }
 
@@ -35,7 +27,6 @@ class GroceryController extends Controller
      */
     public function store(Request $request, Household $household)
     {
-        Log::info($request['unit']);
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:20',
             'quantity'    => 'nullable|gte:0|integer|lte:999',
@@ -57,21 +48,13 @@ class GroceryController extends Controller
             ], 400);
         }
 
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         Grocery::factory()->create([
             'name' => $validated['name'],
             'quantity' => $validated['quantity'],
             'description' => $validated['description'],
             'unit' => $validated['unit'],
             'household_id' => $household->id,
-            'user_id' => $authUser->id,
+            'user_id' => Auth::id(),
         ]);
 
         return response()->json([
@@ -84,14 +67,6 @@ class GroceryController extends Controller
      */
     public function show(Household $household, Grocery $grocery)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         return $grocery;
     }
 
@@ -121,14 +96,6 @@ class GroceryController extends Controller
             ], 400);
         }
 
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id) && $authUser->id !== $grocery->user->id) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         if (isset($validated['name'])) {
             $grocery['name'] = $validated['name'];
         }
@@ -154,14 +121,6 @@ class GroceryController extends Controller
      */
     public function destroy(Household $household, Grocery $grocery)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains("id", $household->id)) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $grocery->delete();
 
         return response()->json([
