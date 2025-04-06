@@ -13,7 +13,7 @@ class MapSegment extends Model
     use HasFactory;
     public static function getSegmentTypes(): array
     {
-        return ['shelf', 'fridge', 'empty', 'cashregister', 'entrance', 'wall'];
+        return ['shelf', 'fridge', 'empty', 'cashregister', 'entrance', 'wall', 'exit'];
     }
 
     public function section(): BelongsTo

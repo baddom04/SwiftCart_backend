@@ -29,7 +29,7 @@ class LocationController extends Controller
                 'zip_code' => 'required|string|size:4|regex:/^\d{4}$/',
                 'city' => 'required|string',
                 'street' => 'required|string',
-                'detail' => 'string',
+                'detail' => 'nullable|string',
             ]
         );
 
@@ -79,7 +79,7 @@ class LocationController extends Controller
                 'zip_code' => 'required|string|size:4|regex:/^\d{4}$/',
                 'city' => 'required|string',
                 'street' => 'required|string',
-                'detail' => 'string',
+                'detail' => 'nullable|string',
             ]
         );
 

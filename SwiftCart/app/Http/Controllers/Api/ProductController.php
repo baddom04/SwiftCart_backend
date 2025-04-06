@@ -7,6 +7,7 @@ use App\Models\Map;
 use App\Models\MapSegment;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -29,7 +30,7 @@ class ProductController extends Controller
             [
                 'name' => 'required|string|max:20',
                 'brand' => 'required|string|max:20',
-                'description' => 'string|max:255',
+                'description' => 'nullable|string|max:255',
                 'price' => 'required|integer|between:0,9999999'
             ]
         );
@@ -45,7 +46,7 @@ class ProductController extends Controller
         $product = Product::factory()->create([
             'name' => $validated['name'],
             'brand' => $validated['brand'],
-            'description' => $validated['description'],
+            'description' => $validated['description'] ?? null,
             'price' => $validated['price'],
             'map_segment_id' => $segment->id,
         ]);
@@ -78,7 +79,7 @@ class ProductController extends Controller
             [
                 'name' => 'required|string|max:20',
                 'brand' => 'required|string|max:20',
-                'description' => 'string|max:255',
+                'description' => 'nullable|string|max:255',
                 'price' => 'required|integer|between:0,9999999'
             ]
         );
