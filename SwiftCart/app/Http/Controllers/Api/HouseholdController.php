@@ -36,26 +36,10 @@ class HouseholdController extends Controller
     }
     public function list(User $user)
     {
-        $authUser = Auth::user();
-
-        if ($authUser->id !== $user->id && !$authUser->admin) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         return HouseholdResource::collection($user->memberHouseholds);
     }
     public function list_users(Household $household)
     {
-        $authUser = Auth::user();
-
-        if (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id)) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         return $household->users;
     }
     public function get_user_relationship(Household $household)
@@ -146,14 +130,6 @@ class HouseholdController extends Controller
             ], 400);
         }
 
-        $authUser = Auth::user();
-
-        if ($authUser->id !== $household->user->id && !$authUser->admin) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $validated = $validator->validated();
         $household->name = $validated['name'];
         $household->identifier = $validated['identifier'];
@@ -169,14 +145,6 @@ class HouseholdController extends Controller
      */
     public function destroy(Household $household)
     {
-        $authUser = Auth::user();
-
-        if ($authUser->id !== $household->user->id && !$authUser->admin) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $household->delete();
 
         return response()->json([
@@ -190,10 +158,10 @@ class HouseholdController extends Controller
 
         if (
             !$authUser->admin &&
-            $household->user_id !== $authUser->id &&
+            $household->user->id !== $authUser->id &&
             $authUser->id !== $user->id
         ) {
-            return response()->json(['error' => 'Unauthorized.'], 403);
+            return response()->json(['error' => 'Unauthorized.'], 401);
         }
 
         $isOwner = $household->user_id === $user->id;

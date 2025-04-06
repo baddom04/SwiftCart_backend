@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Middleware\CheckHouseholdMember;
+use App\Http\Middleware\CheckHouseholdOwner;
 use App\Http\Middleware\CheckStoreOwner;
 use App\Http\Middleware\CheckUserOwner;
 use Illuminate\Support\Facades\Route;
@@ -34,12 +36,18 @@ Route::middleware('auth:sanctum')->group(
         Route::post('households', [HouseholdController::class, 'store'])->name('api.households.store');
         Route::get('households/search', [HouseholdController::class, 'index'])->name('api.households.index');
         Route::get('households/{household}', [HouseholdController::class, 'show'])->where('household', '[0-9]+')->name('api.households.show');
-        Route::get('households/{household}/users', [HouseholdController::class, 'list_users'])->where('household', '[0-9]+')->name('api.households.list_users');
         Route::get('households/{household}/relationship', [HouseholdController::class, 'get_user_relationship'])->where('household', '[0-9]+')->name('api.households.get_user_relationship');
-        Route::get('users/{user}/households', [HouseholdController::class, 'list'])->where('user', '[0-9]+')->name('api.households.list');
-        Route::put('households/{household}', [HouseholdController::class, 'update'])->where('household', '[0-9]+')->name('api.households.update');
-        Route::delete('households/{household}', [HouseholdController::class, 'destroy'])->where('household', '[0-9]+')->name('api.households.destroy');
         Route::delete('households/{household}/users/{user}', [HouseholdController::class, 'removeMember'])->where('household', '[0-9]+')->where('user', '[0-9]+')->name('api.households.removeMember');
+        Route::middleware([CheckHouseholdMember::class])->group(function () {
+            Route::get('households/{household}/users', [HouseholdController::class, 'list_users'])->where('household', '[0-9]+')->name('api.households.list_users');
+        });
+        Route::middleware([CheckUserOwner::class])->group(function () {
+            Route::get('users/{user}/households', [HouseholdController::class, 'list'])->where('user', '[0-9]+')->name('api.households.list');
+        });
+        Route::middleware([CheckHouseholdOwner::class])->group(function () {
+            Route::put('households/{household}', [HouseholdController::class, 'update'])->where('household', '[0-9]+')->name('api.households.update');
+            Route::delete('households/{household}', [HouseholdController::class, 'destroy'])->where('household', '[0-9]+')->name('api.households.destroy');
+        });
 
         //HouseholdApplicationController
         Route::post('households/{household}/applications', [HouseholdApplicationController::class, 'store'])->where('household', '[0-9]+')->name('api.household_applications.store');
