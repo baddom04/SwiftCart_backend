@@ -41,14 +41,6 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $authUser = Auth::user();
-
-        if ($authUser->id !== $user->id && !$authUser->admin) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'name'     => 'nullable|string|max:20',
             'email'    => 'nullable|email|max:50|unique:users,email,' . $user->id,
@@ -79,14 +71,6 @@ class UserController extends Controller
 
     public function update_password(Request $request, User $user)
     {
-        $authUser = Auth::user();
-
-        if ($authUser->id !== $user->id && !$authUser->admin) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'current_password' => 'required|string|min:8',
             'new_password' => 'required|string|min:8'
@@ -117,14 +101,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $authUser = Auth::user();
-
-        if ($authUser->id !== $user->id && !$authUser->admin) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], 403);
-        }
-
         $user->tokens()->delete();
 
         $user->delete();

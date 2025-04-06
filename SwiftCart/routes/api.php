@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\CheckStoreOwner;
+use App\Http\Middleware\CheckUserOwner;
 use Illuminate\Support\Facades\Route;
 
 Route::post('register', [UserController::class, 'register'])->name('api.register');
@@ -23,9 +24,11 @@ Route::middleware('auth:sanctum')->group(
         // UserController
         Route::post('logout', [UserController::class, 'logout'])->name('api.logout');
         Route::get('user', [UserController::class, 'user'])->name('api.user');
-        Route::delete('users/{user}', [UserController::class, 'destroy'])->where('user', '[0-9]+')->name('api.users.destroy');
-        Route::put('users/{user}', [UserController::class, 'update'])->where('user', '[0-9]+')->name('api.users.update');
-        Route::put('users/{user}/password', [UserController::class, 'update_password'])->where('user', '[0-9]+')->name('api.users.update_password');
+        Route::middleware([CheckUserOwner::class])->group(function () {
+            Route::delete('users/{user}', [UserController::class, 'destroy'])->where('user', '[0-9]+')->name('api.users.destroy');
+            Route::put('users/{user}', [UserController::class, 'update'])->where('user', '[0-9]+')->name('api.users.update');
+            Route::put('users/{user}/password', [UserController::class, 'update_password'])->where('user', '[0-9]+')->name('api.users.update_password');
+        });
 
         //HouseholdController
         Route::post('households', [HouseholdController::class, 'store'])->name('api.households.store');
