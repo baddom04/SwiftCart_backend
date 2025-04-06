@@ -17,7 +17,7 @@ return new class extends Migration
             $table->char('zip_code', 4);
             $table->string('city');
             $table->string('street');
-            $table->string('detail');
+            $table->string('detail')->nullable();
             $table->unsignedBigInteger('store_id')->unique();
             $table->timestamps();
 
