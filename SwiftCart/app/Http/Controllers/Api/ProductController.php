@@ -30,7 +30,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:20',
                 'brand' => 'required|string|max:20',
                 'description' => 'required|string|max:255',
-                'price' => 'required|decimal:2'
+                'price' => 'required|integer|between:0,9999999'
             ]
         );
 
@@ -79,7 +79,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:20',
                 'brand' => 'required|string|max:20',
                 'description' => 'required|string|max:255',
-                'price' => 'required|decimal:2'
+                'price' => 'required|integer|between:0,9999999'
             ]
         );
 

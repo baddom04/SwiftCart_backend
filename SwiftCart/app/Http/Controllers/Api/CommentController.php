@@ -24,7 +24,8 @@ class CommentController extends Controller
             return response()->json(['error' => 'Unauthenticated'], 403);
         }
 
-        return CommentResource::collection($grocery->comments);
+        $grocery->comments->load('user');
+        return $grocery->comments;
     }
 
     /**
