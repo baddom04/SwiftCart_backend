@@ -109,4 +109,73 @@ class LocationController extends Controller
         $store->location->delete();
         return response()->json(['Message' => 'Location deleted successfully'], 200);
     }
+
+    public function getCountries()
+    {
+        $countries = Location::distinct()->pluck('country');
+
+        return response()->json([
+            'countries' => $countries
+        ]);
+    }
+    public function getCities(Request $request)
+    {
+        $country = $request->query('country');
+
+        if (!$country) {
+            return response()->json([
+                'error' => 'Missing required query parameter: country'
+            ], 400);
+        }
+
+        $cities = Location::where('country', $country)
+            ->distinct()
+            ->pluck('city');
+
+        return response()->json([
+            'cities' => $cities
+        ]);
+    }
+    public function getStreets(Request $request)
+    {
+        $country = $request->query('country');
+        $city    = $request->query('city');
+
+        if (!$country || !$city) {
+            return response()->json([
+                'error' => 'Missing required query parameters: country and/or city'
+            ], 400);
+        }
+
+        $streets = Location::where('country', $country)
+            ->where('city', $city)
+            ->distinct()
+            ->pluck('street');
+
+        return response()->json([
+            'streets' => $streets
+        ]);
+    }
+    public function getDetails(Request $request)
+    {
+        $country = $request->query('country');
+        $city    = $request->query('city');
+        $street  = $request->query('street');
+
+        if (!$country || !$city || !$street) {
+            return response()->json([
+                'error' => 'Missing required query parameters: country, city, and/or street'
+            ], 400);
+        }
+
+        $details = Location::where('country', $country)
+            ->where('city', $city)
+            ->where('street', $street)
+            ->distinct()
+            ->pluck('detail');
+
+        return response()->json([
+            'details' => $details
+        ]);
+    }
 }

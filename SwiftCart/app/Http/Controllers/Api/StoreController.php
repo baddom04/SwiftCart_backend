@@ -18,23 +18,39 @@ class StoreController extends Controller
         $search = $request->query('search', '');
         $perPage = $request->query('per_page', 5);
 
-        $query = Store::query();
+        $query = Store::with('location');
 
         $query->where('published', 1);
 
         if (trim($search) !== '') {
-            $query->where('name', 'LIKE', "%{$search}%")
-                ->orWhereHas('location', function ($query) use ($search) {
-                    $query->where('country', 'LIKE', "%{$search}%")
-                        ->orWhere('city', 'LIKE', "%{$search}%")
-                        ->orWhere('zipcode', 'LIKE', "%{$search}%")
-                        ->orWhere('street', 'LIKE', "%{$search}%")
-                        ->orWhere('detail', 'LIKE', "%{$search}%");
-                });
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
+
+        if ($request->filled('country')) {
+            $query->whereHas('location', function ($q) use ($request) {
+                $q->where('country', $request->query('country'));
+            });
+        }
+
+        if ($request->filled('city')) {
+            $query->whereHas('location', function ($q) use ($request) {
+                $q->where('city', $request->query('city'));
+            });
+        }
+
+        if ($request->filled('street')) {
+            $query->whereHas('location', function ($q) use ($request) {
+                $q->where('street', $request->query('street'));
+            });
+        }
+
+        if ($request->filled('detail')) {
+            $query->whereHas('location', function ($q) use ($request) {
+                $q->where('detail', $request->query('detail'));
+            });
         }
 
         $stores = $query->paginate($perPage);
-        $stores->load('location');
 
         return $stores;
     }

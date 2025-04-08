@@ -102,6 +102,12 @@ Route::middleware('auth:sanctum')->group(
             Route::put('stores/{store}/location', [LocationController::class, 'update'])->where('store', '[0-9]+')->name('api.locations.update');
             Route::delete('stores/{store}/location', [LocationController::class, 'destroy'])->where('store', '[0-9]+')->name('api.locations.destroy');
         });
+        Route::prefix('locations/search')->group(function () {
+            Route::get('countries', [LocationController::class, 'getCountries'])->name('api.locations.getCountries');
+            Route::get('cities', [LocationController::class, 'getCities'])->name('api.locations.getCities');
+            Route::get('streets', [LocationController::class, 'getStreets'])->name('api.locations.getStreets');
+            Route::get('details', [LocationController::class, 'getDetails'])->name('api.locations.getDetails');
+        });
 
         //MapController
         Route::get('stores/{store}/map', [MapController::class, 'show'])->where('store', '[0-9]+')->name('api.maps.show');
