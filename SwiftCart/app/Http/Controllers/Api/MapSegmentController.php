@@ -67,8 +67,6 @@ class MapSegmentController extends Controller
             ], 400);
         }
 
-        Log::info("Segment update");
-
         $validator = Validator::make(
             $request->all(),
             [
@@ -91,6 +89,11 @@ class MapSegmentController extends Controller
         $segment->x = $validated['x'];
         $segment->y = $validated['y'];
         $segment->type = $validated['type'];
+
+        if ($segment->type !== 'shelf' && $segment->type !== 'fridge') {
+            $segment->products()->delete();
+        }
+
         $segment->save();
 
         return $segment;
