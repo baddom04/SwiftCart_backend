@@ -126,7 +126,6 @@ class ProductController extends Controller
             );
         }
 
-
         $validator = Validator::make($request->all(), [
             'segment_id' => 'required|exists:map_segments,id'
         ]);
