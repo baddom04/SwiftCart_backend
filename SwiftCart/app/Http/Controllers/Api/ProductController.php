@@ -115,4 +115,35 @@ class ProductController extends Controller
         $product->delete();
         return response()->json(['Message' => 'Product deleted successfully'], 200);
     }
+    public function updateSegment(Request $request, MapSegment $segment, Product $product)
+    {
+        if ($product->map_segment->id !== $segment->id) {
+            return response()->json(
+                [
+                    'errors' => 'The given product\'s segment id does not match the given segment\'s id'
+                ],
+                400
+            );
+        }
+
+
+        $validator = Validator::make($request->all(), [
+            'segment_id' => 'required|exists:map_segments,id'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        $newSegmentId = $validator->validated()['segment_id'];
+
+        $product->segment_id = $newSegmentId;
+        $product->save();
+
+        return response()->json([
+            'Message' => 'Product segment updated successfully',
+        ], 200);
+    }
 }

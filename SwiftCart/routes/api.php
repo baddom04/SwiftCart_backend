@@ -135,11 +135,12 @@ Route::middleware('auth:sanctum')->group(
 
         //ProductController
         Route::get('maps/{map}/products', [ProductController::class, 'index'])->where('map', '[0-9]+')->name('api.products.index');
-        Route::get('products/{product}', [ProductController::class, 'show'])->where('map', '[0-9]+')->where('product', '[0-9]+')->name('api.products.show');
+        Route::get('products/{product}', [ProductController::class, 'show'])->where('product', '[0-9]+')->where('product', '[0-9]+')->name('api.products.show');
         Route::middleware([CheckStoreOwner::class])->group(function () {
             Route::post('segments/{segment}/products', [ProductController::class, 'store'])->where('segment', '[0-9]+')->name('api.products.store');
-            Route::put('segments/{segment}/products/{product}', [ProductController::class, 'update'])->where('map', '[0-9]+')->where('product', '[0-9]+')->name('api.products.update');
-            Route::delete('segments/{segment}/products/{product}', [ProductController::class, 'destroy'])->where('map', '[0-9]+')->where('product', '[0-9]+')->name('api.products.destroy');
+            Route::put('segments/{segment}/products/{product}', [ProductController::class, 'update'])->where('segment', '[0-9]+')->where('product', '[0-9]+')->name('api.products.update');
+            Route::delete('segments/{segment}/products/{product}', [ProductController::class, 'destroy'])->where('segment', '[0-9]+')->where('product', '[0-9]+')->name('api.products.destroy');
+            Route::put('segments/{segment}/products/{product}/segment', [ProductController::class, 'updateSegment'])->where('segment', '[0-9]+')->where('product', '[0-9]+')->name('api.products.updateSegment');
         });
     }
 );
