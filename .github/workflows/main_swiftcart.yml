@@ -53,6 +53,11 @@ jobs:
       contents: read #This is required for actions/checkout
 
     steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
@@ -60,6 +65,9 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
+
+      - name: Show unzipped contents
+        run: ls -al
 
       - name: List API routes
         run: php artisan route:list
