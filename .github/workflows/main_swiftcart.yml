@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read # This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
@@ -23,18 +23,27 @@ jobs:
         with:
           php-version: "8.4"
 
-      - name: Check if composer.json exists
+      - name: Check if composer.json exists in SwiftCart
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: "composer.json"
+          files: "SwiftCart/composer.json"
 
-      - name: Run composer install if composer.json exists
+      - name: Run composer install in SwiftCart if composer.json exists
         if: steps.check_files.outputs.files_exists == 'true'
-        run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+        run: |
+          cd SwiftCart
+          composer validate --no-check-publish && composer install --prefer-dist --no-progress
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+      - name: List build files in SwiftCart
+        run: |
+          cd SwiftCart
+          ls -al
+
+      - name: Zip SwiftCart artifact for deployment
+        run: |
+          cd SwiftCart
+          zip -r ../release.zip . -x '*.git*'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -49,8 +58,8 @@ jobs:
       name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
 
     steps:
       - name: Setup PHP
@@ -63,14 +72,16 @@ jobs:
         with:
           name: php-app
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
+      - name: Unzip artifact for deployment into SwiftCartDeploy folder
+        run: unzip release.zip -d SwiftCartDeploy
 
       - name: Show unzipped contents
-        run: ls -al
+        run: ls -al SwiftCartDeploy
 
       - name: List API routes
-        run: php ./SwiftCart/artisan route:list
+        run: |
+          cd SwiftCartDeploy
+          php artisan route:list
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -85,4 +96,4 @@ jobs:
         with:
           app-name: "swiftcart"
           slot-name: "Production"
-          package: .
+          package: SwiftCartDeploy
