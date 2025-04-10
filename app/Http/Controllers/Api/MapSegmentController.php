@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Map;
 use App\Models\MapSegment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 

@@ -7,7 +7,6 @@ use App\Models\Map;
 use App\Models\MapSegment;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
