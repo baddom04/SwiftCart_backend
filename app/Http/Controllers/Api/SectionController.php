@@ -27,7 +27,14 @@ class SectionController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|string|max:20|unique:sections',
+                'name' => [
+                    'required',
+                    'string',
+                    'max:20',
+                    Rule::unique('sections')->where(function ($query) use ($map) {
+                        return $query->where('map_id', $map->id);
+                    })
+                ],
             ]
         );
 
