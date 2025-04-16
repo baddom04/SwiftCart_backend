@@ -72,7 +72,9 @@ class SectionController extends Controller
                     'required',
                     'string',
                     'max:20',
-                    Rule::unique('sections')->ignore($section->id),
+                    Rule::unique('sections')->where(function ($query) use ($map) {
+                        return $query->where('map_id', $map->id);
+                    })->ignore($section->id),
                 ]
             ]
         );
