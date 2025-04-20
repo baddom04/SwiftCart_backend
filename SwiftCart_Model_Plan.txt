@@ -1,61 +1,56 @@
-[MVP]
-
 User
-- ID - unique, primary key
-- username - string, at least 5 chars, max 20
-- password - string, at least 8 chars
-- email address - email, unique, max 50
-- isAdmin - bool, default: false
+- id - unique, primary key
+- username - string, max 20 chars
+- password - string
+- email - string, unique, max 50 chars
+- admin - bool, default: false
 
 Household
-- ID - unique, primary key
-- Display Name - string at least 5 chars, max 20
-- Identifier - string at least 5 chars, max 20
-- ownerUserID - unique
+- id - unique, primary key
+- name - string, max 20 chars
+- identifier - string, unique, max 20 chars
+- user_id - unsignedBigInteger
 
-User-household
-- ID - unique, primary key
-- userID - unique
-- householdID - unique
+UserHousehold
+- id - unique, primary key
+- user_id - unsignedBigInteger
+- household_id - unsignedBigInteger
 
 HouseholdApplication
-- ID - unique, primary key
-- userID - unique
-- householdID - unique
+- id - unique, primary key
+- user_id - unsignedBigInteger
+- household_id - unsignedBigInteger
 
 Grocery
-- ID - unique, primary key
-- Name - string, not empty, max 20
-- Quantity - integer, nullable
-- Unit type - enum, nullable (either both are null, or none)
-- Description - string, nullable, max 255
-- householdID - unique
-- userID - unique
+- id - unique, primary key
+- name - string, max 20 chars
+- quantity - integer, nullable
+- unit - enum, nullable, allowed: ['pieces', 'pair', 'kilogram', 'pound', 'inch', 'ounce', 'liter', 'decagram', 'deciliter']
+- description - string, nullable, max 255 chars
+- household_id - unsignedBigInteger
+- user_id - unsignedBigInteger
 
-Connections
-- User - household  ->  many to many
-- User - household -> one to many (ownership)
-- User - grocery  ->  1 to many
-- User - householdApplication -> 1 to many
-- Household - householdApplication -> 1 to many
-- Household - grocery  ->  1 to many
-
-[MVP+]
+Comment
+- id - unique, primary key
+- content - string, max 255
+- user_id - unsignedBigInteger
+- grocery_id - unsignedBigInteger
 
 Store
-- ID - unique, primary key
-- userID
-- Name - string, not empty, unique
+- id - unique, primary key
+- user_id -> unsignedBigInteger
+- name - string, max 50
+- published - bool, default: false
 
 Map
-- ID - unique, primary key
-- storeID
-- Horizontal size - integer
-- Vertical size - integer
+- id - unique, primary key
+- store_id - unsignedBigInteger
+- x_size - unsignedBigInteger
+- y_size - unsignedBigInteger
 
 Location
-- ID - unique, primary key
-- storeID
+- id - unique, primary key
+- store_id - unsignedBigInteger
 - country - string
 - zip code - char, 4
 - city - string
@@ -63,47 +58,39 @@ Location
 - detail - string, nullable
 
 Section
-- ID - unique, primary key
-- mapID
-- Name - string, unique
+- id - unique, primary key
+- map_id - unsignedBigInteger
+- name - string, unique
 
-Map segment
-- ID - unique, primary key
-- mapID
-- sectionID - nullable 
-- horizontal index - integer
-- vertical index - integer
-- type - enum (product container [shelf, fridge etc.], empty space, outside of store, cashier, entry, wall etc.)
-
-Product
-- ID - unique, primary key
-- mapSegmentID
-- Name - string, not empty
-- Brand - string, not empty
-- Description - string, nullable
-
-Connections
-- store - location -> 1 to 1
-- store - map  ->  1 to 1
-- store - section -> 1 to many
-- Section to map segment -> 1 to many
-- Map - map segment  ->  1 to many
-- Map segment - product  ->  1 to many 
-
-[OPTIONAL]
-
-Comment
-- ID - unique, primary key
-- Content - string, not emtpy, max 255
-- userID - unique
-- groceryID - unique
-
-store
-- preview image
+MapSegment
+- id - unique, primary key
+- map_id - unsignedBigInteger
+- section_id - nullable, unsignedBigInteger
+- x - unsignedBigInteger
+- y - unsignedBigInteger
+- type - enum, allowed: ['shelf', 'fridge', 'empty', 'cashregister', 'entrance', 'wall', 'exit']
 
 Product
-- preview image
+- id - unique, primary key
+- map_segment_id - unsignedBigInteger
+- name - string
+- brand - string
+- price - unsignedBigInteger
+- description - string, nullable
 
 Connections
-- User - comment -> 1 to many
-- Grocery - comment -> 1 to many
+- Store - User -> 1 to 1
+- Store - Location -> 1 to 1
+- Store - Map  ->  1 to 1
+- Store - Section -> 1 to many
+- Section to MapSegment -> 1 to many
+- Map - MapSegment  ->  1 to many
+- MapSegment - Product  ->  1 to many 
+- User - Household -> many to many
+- User - Household -> one to many (ownership)
+- User - Grocery -> 1 to many
+- User - HouseholdApplication -> 1 to many
+- Household - HouseholdApplication -> 1 to many
+- Household - Grocery -> 1 to many
+- User - Comment -> 1 to many
+- Grocery - Comment -> 1 to many
