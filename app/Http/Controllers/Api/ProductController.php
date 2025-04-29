@@ -137,7 +137,7 @@ class ProductController extends Controller
 
         $newSegmentId = $validator->validated()['segment_id'];
 
-        $product->segment_id = $newSegmentId;
+        $product->map_segment_id = $newSegmentId;
         $product->save();
 
         return response()->json([

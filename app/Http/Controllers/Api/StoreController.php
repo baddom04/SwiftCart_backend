@@ -65,7 +65,7 @@ class StoreController extends Controller
         if ($user->store !== null) {
             return response()->json([
                 'error' => 'This user already has a store.'
-            ]);
+            ], 400);
         }
 
         $validator = Validator::make(
