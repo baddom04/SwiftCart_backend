@@ -60,9 +60,9 @@ class MapController extends Controller
     public function update(Request $request, Store $store)
     {
         if ($store->map === null) {
-            return response([
+            return response()->json([
                 'error' => 'The map to this store does not exist'
-            ], 400)->json();
+            ], 400);
         }
 
         $validator = Validator::make(

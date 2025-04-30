@@ -16,9 +16,9 @@ class LocationController extends Controller
     public function store(Request $request, Store $store)
     {
         if ($store->location !== null) {
-            return response([
+            return response()->json([
                 'error' => 'The location to this store already exists'
-            ], 400)->json();
+            ], 400);
         }
 
         $validator = Validator::make(
@@ -66,9 +66,9 @@ class LocationController extends Controller
     public function update(Request $request, Store $store)
     {
         if ($store->location === null) {
-            return response([
+            return response()->json([
                 'error' => 'The location to this store does not exist'
-            ], 400)->json();
+            ], 400);
         }
 
         $validator = Validator::make(
