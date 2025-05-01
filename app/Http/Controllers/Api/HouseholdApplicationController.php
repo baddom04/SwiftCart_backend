@@ -14,14 +14,6 @@ use Illuminate\Support\Facades\DB;
 class HouseholdApplicationController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Household $household)
@@ -57,22 +49,6 @@ class HouseholdApplicationController extends Controller
         ]);
 
         return response()->json(['Message' => 'Application created successfully'], 200);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
