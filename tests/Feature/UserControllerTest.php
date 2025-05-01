@@ -45,6 +45,24 @@ class UserControllerTest extends TestCase
     }
 
     /** @test */
+    public function register_validation_error_on_duplicate_email()
+    {
+        $payload = [
+            'name'     => 'John Doe',
+            'email'    => 'john@example.com',
+            'password' => 'secret123',
+        ];
+
+        $this->postJson(route('api.register'), $payload);
+        $response = $this->postJson(route('api.register'), $payload);
+
+        $response->assertStatus(400)
+            ->assertJsonStructure([
+                'error' => ['email']
+            ]);
+    }
+
+    /** @test */
     public function login_with_valid_credentials_returns_token()
     {
         $user = User::factory()->create([
