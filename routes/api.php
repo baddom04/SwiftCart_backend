@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\CheckCommentOwner;
 use App\Http\Middleware\CheckGroceryOwner;
 use App\Http\Middleware\CheckHouseholdMember;
+use App\Http\Middleware\CheckHouseholdOrUserOwner;
 use App\Http\Middleware\CheckHouseholdOwner;
 use App\Http\Middleware\CheckStoreOwner;
 use App\Http\Middleware\CheckUserOwner;
@@ -58,11 +59,13 @@ Route::middleware('auth:sanctum')->group(
         Route::middleware([CheckUserOwner::class])->group(function () {
             Route::get('users/{user}/applications', [HouseholdApplicationController::class, 'get_sent_applications'])->where('user', '[0-9]+')->name('api.household_applications.get_sent_applications');
             Route::get('users/{user}/applications/households', [HouseholdApplicationController::class, 'get_sent_households'])->where('user', '[0-9]+')->name('api.household_applications.get_sent_households');
-            Route::get('users/{user}/households/{household}/application', [HouseholdApplicationController::class, 'find'])->where('user', '[0-9]+')->where('household', '[0-9]+')->name('api.household_applications.find');
         });
         Route::middleware([CheckHouseholdOwner::class])->group(function () {
             Route::get('households/{household}/applications', [HouseholdApplicationController::class, 'get_received_applications'])->where('household', '[0-9]+')->name('api.household_applications.get_received_applications');
             Route::get('households/{household}/applications/users', [HouseholdApplicationController::class, 'get_received_users'])->where('household', '[0-9]+')->name('api.household_applications.get_received_users');
+        });
+        Route::middleware([CheckHouseholdOrUserOwner::class])->group(function () {
+            Route::get('users/{user}/households/{household}/application', [HouseholdApplicationController::class, 'find'])->where('user', '[0-9]+')->where('household', '[0-9]+')->name('api.household_applications.find');
         });
 
         //GroceryController
