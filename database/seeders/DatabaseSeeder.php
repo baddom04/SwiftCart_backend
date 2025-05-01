@@ -78,10 +78,12 @@ class DatabaseSeeder extends Seeder
                     $segment->section_id = rand(0, 1) ? $sections->random()->id : null;
                     $segment->save();
 
-                    $productCount = rand(1, 3);
-                    Product::factory($productCount)->create([
-                        'map_segment_id' => $segment->id,
-                    ]);
+                    if ($segment->type === 'fridge' || $segment->type === 'shelf') {
+                        $productCount = rand(1, 3);
+                        Product::factory($productCount)->create([
+                            'map_segment_id' => $segment->id,
+                        ]);
+                    }
                 }
             }
         });
