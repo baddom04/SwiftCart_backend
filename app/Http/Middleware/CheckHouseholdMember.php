@@ -20,7 +20,7 @@ class CheckHouseholdMember
 
         $authUser = Auth::user();
 
-        if (!$household || (!$authUser->admin && !$authUser->memberHouseholds->contains('id', $household->id))) {
+        if (!$household || (!$authUser->admin && !$household->users->contains('id', $authUser->id))) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $next($request);
